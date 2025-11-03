@@ -24,6 +24,19 @@ Découvrez le meilleur moment pour acheter votre billet d'avion.
           @error="handleError" />
       </div>
 
+      <!-- Loading Indicator -->
+      <div v-if="loading" class="mb-8">
+        <div class="w-full h-2 bg-blue-100 rounded-full overflow-hidden dark:bg-blue-900/30">
+          <div
+            class="progress-bar"
+            :style="{ width: Math.min(progress, 100) + '%' }">
+          </div>
+        </div>
+        <p class="mt-2 text-sm text-center font-medium text-blue-600 dark:text-blue-300">
+          Analyse des prix en cours, merci de patienter... ({{ Math.min(progress, 100) }}%)
+        </p>
+      </div>
+
       <!-- Results -->
       <div v-if="priceData" class="space-y-8">
         <!-- Price Chart -->
@@ -52,7 +65,7 @@ Découvrez le meilleur moment pour acheter votre billet d'avion.
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onBeforeUnmount } from 'vue'
 import axios from 'axios'
 import LP_Header from '../components/Landing/LP_Header.vue'
 import LP_Footer from '../components/Landing/LP_Footer.vue'
@@ -64,12 +77,59 @@ import { usePricingAnalysis } from '../composables/usePricingAnalysis.js'
 const searchFormRef = ref(null)
 const priceData = ref(null)
 const loading = ref(false)
+const progress = ref(0)
+
+const progressTimer = ref(null)
+
+const clearProgressTimer = () => {
+  if (progressTimer.value) {
+    clearInterval(progressTimer.value)
+    progressTimer.value = null
+  }
+}
+
+const startProgressTimer = () => {
+  clearProgressTimer()
+  progress.value = 0
+  const start = Date.now()
+  progressTimer.value = setInterval(() => {
+    const elapsed = Date.now() - start
+    let target = progress.value
+
+    if (elapsed <= 10000) {
+      // 0 ➝ 60% in 10 seconds
+      target = Math.floor((elapsed / 10000) * 60)
+    } else if (elapsed <= 35000) {
+      const stageElapsed = elapsed - 10000
+
+      if (stageElapsed <= 15000) {
+        // 60% ➝ 85% over the next 15 seconds
+        target = 60 + Math.floor((stageElapsed / 15000) * 25)
+      } else {
+        // 85% ➝ 95%, 1 point per second (slow)
+        const slowElapsed = stageElapsed - 15000
+        target = 85 + Math.min(10, Math.floor(slowElapsed / 1000))
+      }
+    } else {
+      target = 95
+    }
+
+    // Ensure the percentage never goes backward and stays within bounds
+    progress.value = Math.min(95, Math.max(progress.value, target))
+
+    if (progress.value >= 95) {
+      clearProgressTimer()
+    }
+  }, 200)
+}
 
 // Use the pricing analysis composable
 const { analysis } = usePricingAnalysis(priceData)
 
 const handleSearch = async (formData) => {
   loading.value = true
+  priceData.value = null
+  startProgressTimer()
 
   try {
     // Build query params for period analysis
@@ -114,6 +174,8 @@ const handleSearch = async (formData) => {
       searchFormRef.value.setError(errorMessage)
     }
   } finally {
+    progress.value = 100
+    clearProgressTimer()
     loading.value = false
     if (searchFormRef.value) {
       searchFormRef.value.setLoading(false)
@@ -124,4 +186,16 @@ const handleSearch = async (formData) => {
 const handleError = (error) => {
   console.error('Form error:', error)
 }
+
+onBeforeUnmount(() => {
+  clearProgressTimer()
+})
 </script>
+
+<style scoped>
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, rgba(59,130,246,0.6) 0%, rgba(37,99,235,0.9) 100%);
+  transition: width 0.2s ease-in-out;
+}
+</style>
