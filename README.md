@@ -14,8 +14,10 @@ npm install
 cp .env.example .env.local
 ```
 
-3. Configure your Amadeus credentials and FlightAPI key in `.env.local`:
+3. Configure your FlightSky (RapidAPI), Amadeus credentials, and FlightAPI key in `.env.local`:
 ```env
+FLIGHTSKY_API_KEY=your_flightsky_rapidapi_key
+FLIGHTSKY_API_HOST=flights-sky.p.rapidapi.com
 AMADEUS_API_KEY=your_amadeus_api_key
 AMADEUS_API_SECRET_KEY=your_amadeus_api_secret
 FLIGHT_API_KEY=your_actual_api_key_here
@@ -81,8 +83,8 @@ Response:
 
 ## Features
 
-- **FlightAPI Integration**: Fetches real flight pricing data from FlightAPI
-- **Smart Fallback**: Generates realistic mock data when API is unavailable
+- **FlightSky Integration**: Uses RapidAPI FlightSky calendar data for multi-day price insights
+- **Smart Fallback**: Generates realistic mock data (FlightAPI-based) when external APIs are unavailable
 - **Caching**: 30-minute cache to reduce API calls and improve performance
 - **Error Handling**: Graceful degradation with meaningful error messages
 - **CORS**: Configured for frontend integration

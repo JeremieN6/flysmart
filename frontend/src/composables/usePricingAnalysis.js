@@ -18,7 +18,9 @@ function normalizeFromLegacyStructure(raw) {
   const prices = raw.prices.map(point => ({
     daysBefore: point.daysBefore,
     price: Math.round(point.price),
-    departureDate: routeFallback.date
+    departureDate: point.departureDate || routeFallback.date,
+    ranking: point.ranking || null,
+    recommendation: point.recommendation || null
   }))
 
   return {

@@ -1,4 +1,5 @@
-import { analyzePricesForPeriod } from '../services/amadeusService.js'
+import { analyzePricesWithFlightSky } from '../services/flightsSkyService.js'
+import { fetchFlightPrices } from '../services/flightApiService.js'
 
 /**
  * Analyser les prix de vols pour une période donnée
@@ -60,33 +61,100 @@ export async function getPrices(req, res, next) {
       })
     }
 
-    console.log(`📊 Analyse des prix ${from} → ${to} du ${startDate} au ${endDate}`)
+    console.log(`📊 Analyse FlightSky ${from} → ${to} du ${startDate} au ${endDate}`)
 
-    // Analyze prices using Amadeus API
-    const result = await analyzePricesForPeriod(
-      from.toUpperCase(),
-      to.toUpperCase(),
-      startDate,
-      endDate,
-      currency.toUpperCase()
-    )
+    let timeline = []
+    let summary = null
+    let cheapestDate = null
+    let source = 'flightsky'
 
-    const now = new Date()
-    const timeline = (result.allDates || [])
-      .filter(entry => entry?.available && entry.price?.min)
-      .map(entry => {
-        const departure = new Date(entry.date)
-        const diffInDays = Math.max(0, Math.round((departure - now) / (1000 * 60 * 60 * 24)))
+    try {
+      const result = await analyzePricesWithFlightSky({
+        from: from.toUpperCase(),
+        to: to.toUpperCase(),
+        startDate,
+        endDate,
+        currency: currency.toUpperCase()
+      })
+
+      timeline = result.prices || []
+      summary = result.summary || null
+      cheapestDate = result.cheapestDate || null
+
+      if (!timeline.length) {
+        throw new Error('Aucune donnée FlightSky exploitables pour la période demandée')
+      }
+    } catch (error) {
+      source = 'fallback'
+      console.warn('⚠️  FlightSky indisponible, utilisation du fallback local:', error.message)
+
+      const fallback = await fetchFlightPrices(
+        from.toUpperCase(),
+        to.toUpperCase(),
+        endDate,
+        {
+          currency: currency.toUpperCase(),
+          cabin
+        }
+      )
+
+      const baseDate = new Date(endDate)
+      const startPeriod = new Date(startDate)
+
+      timeline = (fallback.prices || []).map(point => {
+        const departure = new Date(baseDate)
+        departure.setDate(departure.getDate() - point.daysBefore)
 
         return {
-          daysBefore: diffInDays,
-          price: Math.round(entry.price.min),
-          departureDate: entry.date,
-          ranking: entry.analysis?.ranking || null,
-          recommendation: entry.analysis?.recommendation || null
+          daysBefore: point.daysBefore,
+          price: Math.round(point.price),
+          departureDate: departure.toISOString().split('T')[0],
+          ranking: null,
+          recommendation: null
         }
       })
-      .sort((a, b) => b.daysBefore - a.daysBefore)
+        .filter(item => {
+          const departure = new Date(item.departureDate)
+          if (Number.isNaN(departure.getTime())) {
+            return false
+          }
+          return departure >= startPeriod && departure <= baseDate
+        })
+
+      if (!timeline.length) {
+        throw new Error('Impossible de générer des données de secours pour cette recherche')
+      }
+
+      summary = {
+        minPrice: Math.round(Math.min(...timeline.map(item => item.price))),
+        maxPrice: Math.round(Math.max(...timeline.map(item => item.price))),
+        avgPrice: Math.round(timeline.reduce((sum, item) => sum + item.price, 0) / timeline.length),
+        currency: currency.toUpperCase()
+      }
+
+      cheapestDate = timeline.reduce((best, item) => {
+        if (!best || item.price < best.price) {
+          return { date: item.departureDate, price: item.price }
+        }
+        return best
+      }, null)
+    }
+
+    timeline.sort((a, b) => b.daysBefore - a.daysBefore)
+
+    if (!summary && timeline.length) {
+      summary = {
+        minPrice: Math.round(Math.min(...timeline.map(item => item.price))),
+        maxPrice: Math.round(Math.max(...timeline.map(item => item.price))),
+        avgPrice: Math.round(timeline.reduce((sum, item) => sum + item.price, 0) / timeline.length),
+        currency: currency.toUpperCase()
+      }
+    }
+
+    if (!cheapestDate && timeline.length) {
+      const bestPoint = timeline.reduce((best, item) => item.price < best.price ? item : best, timeline[0])
+      cheapestDate = { date: bestPoint.departureDate, price: bestPoint.price }
+    }
 
     const route = {
       from: from.toUpperCase(),
@@ -95,16 +163,8 @@ export async function getPrices(req, res, next) {
       cabin,
       startDate,
       endDate,
-      date: result.cheapestDate?.date || startDate
-    }
-
-    const summary = result.summary || {}
-
-    const normalizedSummary = {
-      ...summary,
-      minPrice: summary.minPrice != null ? Math.round(summary.minPrice) : null,
-      maxPrice: summary.maxPrice != null ? Math.round(summary.maxPrice) : null,
-      avgPrice: summary.avgPrice != null ? Math.round(summary.avgPrice) : null
+      date: cheapestDate?.date || startDate,
+      source
     }
 
     res.json({
@@ -119,8 +179,8 @@ export async function getPrices(req, res, next) {
       },
       route,
       prices: timeline,
-      ...result,
-      summary: normalizedSummary
+      summary,
+      cheapestDate
     })
   } catch (error) {
     console.error('❌ Erreur dans getPrices:', error.message)
