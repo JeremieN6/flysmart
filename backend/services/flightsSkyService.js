@@ -5,6 +5,7 @@ const cache = new NodeCache({ stdTTL: 600, checkperiod: 120 })
 
 const CALENDAR_ENDPOINT = '/flights/price-calendar'
 const GOOGLE_ROUNDTRIP_ENDPOINT = '/google/price-calendar/for-roundtrip'
+const AUTO_COMPLETE_ENDPOINT = '/flights/auto-complete'
 
 let warnedMissingCredentials = false
 
@@ -48,6 +49,76 @@ function createHttpClient() {
 
 function buildCacheKey(prefix, params) {
   return `${prefix}:${JSON.stringify(params)}`
+}
+
+function looksLikeEntityId(value = '') {
+  return value.length > 3 || /[=]/.test(value)
+}
+
+async function resolveAirportEntityId(code, { market, locale }) {
+  if (!code) {
+    return null
+  }
+
+  if (looksLikeEntityId(code)) {
+    return code
+  }
+
+  const upperCode = code.toUpperCase()
+  const cacheKey = `airport-entity:${upperCode}:${market}:${locale}`
+  const cached = cache.get(cacheKey)
+  if (cached) {
+    return cached
+  }
+
+  const client = createHttpClient()
+
+  try {
+    const response = await client.get(AUTO_COMPLETE_ENDPOINT, {
+      params: {
+        query: upperCode,
+        placeTypes: 'AIRPORT',
+        market,
+        locale
+      }
+    })
+
+    const entries = response.data?.data || []
+
+    const matcher = (entry) => {
+      const skyId = entry?.relevantFlightParams?.skyId || entry?.navigation?.relevantFlightParams?.skyId
+      return skyId && skyId.toUpperCase() === upperCode
+    }
+
+    let match = entries.find(matcher)
+
+    if (!match) {
+      match = entries.find(entry => {
+        const suggestion = entry?.presentation?.suggestionTitle || ''
+        return suggestion.toUpperCase().includes(`(${upperCode})`)
+      })
+    }
+
+    const resolvedId = match?.presentation?.id || match?.id || match?.navigation?.id
+    const fallbackEntityId = match?.navigation?.entityId || match?.relevantFlightParams?.entityId
+
+    if (resolvedId) {
+      cache.set(cacheKey, resolvedId, 3600) // cache 1h
+      return resolvedId
+    }
+
+    if (fallbackEntityId) {
+      const entityIdStr = String(fallbackEntityId)
+      cache.set(cacheKey, entityIdStr, 3600)
+      return entityIdStr
+    }
+
+    console.warn(`⚠️  Impossible de résoudre l'identifiant FlightSky pour ${upperCode}`)
+    return null
+  } catch (error) {
+    console.error('❌ FlightSky auto-complete error:', error.response?.data || error.message)
+    return null
+  }
 }
 
 /**
@@ -211,9 +282,18 @@ export async function analyzePricesWithFlightSky({
   const resolvedMarket = market || runtimeConfig.market
   const resolvedLocale = locale || runtimeConfig.locale
 
+  const [fromEntityId, toEntityId] = await Promise.all([
+    resolveAirportEntityId(from, { market: resolvedMarket, locale: resolvedLocale }),
+    resolveAirportEntityId(to, { market: resolvedMarket, locale: resolvedLocale })
+  ])
+
+  if (!fromEntityId || !toEntityId) {
+    throw new Error('Impossible de résoudre les identifiants aéroport pour FlightSky')
+  }
+
   const params = {
-    fromEntityId: from,
-    toEntityId: to,
+    fromEntityId,
+    toEntityId,
     departDate: startDate,
     startDate,
     endDate,

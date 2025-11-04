@@ -91,35 +91,54 @@ export async function getPrices(req, res, next) {
       const fallback = await fetchFlightPrices(
         from.toUpperCase(),
         to.toUpperCase(),
-        endDate,
+        startDate,
         {
           currency: currency.toUpperCase(),
           cabin
         }
       )
 
-      const baseDate = new Date(endDate)
-      const startPeriod = new Date(startDate)
+      const departureDate = new Date(startDate)
+      const today = new Date()
+      const dayMs = 1000 * 60 * 60 * 24
 
-      timeline = (fallback.prices || []).map(point => {
-        const departure = new Date(baseDate)
-        departure.setDate(departure.getDate() - point.daysBefore)
-
-        return {
-          daysBefore: point.daysBefore,
-          price: Math.round(point.price),
-          departureDate: departure.toISOString().split('T')[0],
-          ranking: null,
-          recommendation: null
+      const basePoints = fallback.prices || []
+      const ensureAnchorAt = (list, daysBefore) => {
+        if (!list.find(point => point.daysBefore === daysBefore)) {
+          list.push({ daysBefore, price: list.length ? list[list.length - 1].price : 700 })
         }
-      })
-        .filter(item => {
-          const departure = new Date(item.departureDate)
-          if (Number.isNaN(departure.getTime())) {
-            return false
+      }
+
+      const simulatedDays = [
+        120, 105, 90, 75, 60, 50, 45, 40, 35, 30, 25, 21, 18, 15, 14, 12, 10, 7, 5, 3, 2, 1
+      ]
+
+      simulatedDays.forEach(day => ensureAnchorAt(basePoints, day))
+
+      const points = basePoints
+        .map(point => ({
+          daysBefore: point.daysBefore,
+          price: Math.round(point.price)
+        }))
+        .sort((a, b) => b.daysBefore - a.daysBefore)
+
+      timeline = points
+        .map(point => {
+          const departure = new Date(departureDate)
+
+          const purchaseDate = new Date(departure)
+          purchaseDate.setDate(purchaseDate.getDate() - point.daysBefore)
+
+          return {
+            daysBefore: point.daysBefore,
+            price: point.price,
+            departureDate: departure.toISOString().split('T')[0],
+            ranking: null,
+            recommendation: null,
+            purchaseDate: purchaseDate.toISOString().split('T')[0]
           }
-          return departure >= startPeriod && departure <= baseDate
         })
+        .sort((a, b) => b.daysBefore - a.daysBefore)
 
       if (!timeline.length) {
         throw new Error('Impossible de générer des données de secours pour cette recherche')
