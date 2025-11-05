@@ -4,8 +4,6 @@ import NodeCache from 'node-cache'
 const cache = new NodeCache({ stdTTL: 600, checkperiod: 120 })
 
 const CALENDAR_ENDPOINT = '/flights/price-calendar'
-const GOOGLE_ROUNDTRIP_ENDPOINT = '/google/price-calendar/for-roundtrip'
-const AUTO_COMPLETE_ENDPOINT = '/flights/auto-complete'
 
 let warnedMissingCredentials = false
 
@@ -51,76 +49,6 @@ function buildCacheKey(prefix, params) {
   return `${prefix}:${JSON.stringify(params)}`
 }
 
-function looksLikeEntityId(value = '') {
-  return value.length > 3 || /[=]/.test(value)
-}
-
-async function resolveAirportEntityId(code, { market, locale }) {
-  if (!code) {
-    return null
-  }
-
-  if (looksLikeEntityId(code)) {
-    return code
-  }
-
-  const upperCode = code.toUpperCase()
-  const cacheKey = `airport-entity:${upperCode}:${market}:${locale}`
-  const cached = cache.get(cacheKey)
-  if (cached) {
-    return cached
-  }
-
-  const client = createHttpClient()
-
-  try {
-    const response = await client.get(AUTO_COMPLETE_ENDPOINT, {
-      params: {
-        query: upperCode,
-        placeTypes: 'AIRPORT',
-        market,
-        locale
-      }
-    })
-
-    const entries = response.data?.data || []
-
-    const matcher = (entry) => {
-      const skyId = entry?.relevantFlightParams?.skyId || entry?.navigation?.relevantFlightParams?.skyId
-      return skyId && skyId.toUpperCase() === upperCode
-    }
-
-    let match = entries.find(matcher)
-
-    if (!match) {
-      match = entries.find(entry => {
-        const suggestion = entry?.presentation?.suggestionTitle || ''
-        return suggestion.toUpperCase().includes(`(${upperCode})`)
-      })
-    }
-
-    const resolvedId = match?.presentation?.id || match?.id || match?.navigation?.id
-    const fallbackEntityId = match?.navigation?.entityId || match?.relevantFlightParams?.entityId
-
-    if (resolvedId) {
-      cache.set(cacheKey, resolvedId, 3600) // cache 1h
-      return resolvedId
-    }
-
-    if (fallbackEntityId) {
-      const entityIdStr = String(fallbackEntityId)
-      cache.set(cacheKey, entityIdStr, 3600)
-      return entityIdStr
-    }
-
-    console.warn(`⚠️  Impossible de résoudre l'identifiant FlightSky pour ${upperCode}`)
-    return null
-  } catch (error) {
-    console.error('❌ FlightSky auto-complete error:', error.response?.data || error.message)
-    return null
-  }
-}
-
 /**
  * Convert a group label (low/medium/high) to an approximate multiplier.
  * Helps us estimate missing average/max values when only a single price is provided.
@@ -145,13 +73,15 @@ function normalizeFlightsCalendarResponse({
   startDate,
   endDate
 }) {
-  if (!data?.status || !Array.isArray(data?.data?.days)) {
+  const calendar = data?.data?.flights
+
+  if (!data?.status || !Array.isArray(calendar?.days)) {
     throw new Error('Réponse FlightSky invalide')
   }
 
   const startFilter = startDate ? new Date(startDate) : null
   const endFilter = endDate ? new Date(endDate) : null
-  const entries = data.data.days
+  const entries = calendar.days
     .map(item => {
       if (!item?.day || item.price == null) {
         return null
@@ -206,6 +136,8 @@ function normalizeFlightsCalendarResponse({
 
   const cheapestEntry = entries.find(item => item.price === minPrice)
 
+  const responseCurrency = currency || calendar?.currencyCode || calendar?.currency || getRuntimeConfig().currency
+
   let inferredMax = maxPrice
   if (!Number.isFinite(inferredMax) || inferredMax === minPrice) {
     const factors = groupToMultiplier(cheapestEntry?.group)
@@ -217,15 +149,15 @@ function normalizeFlightsCalendarResponse({
     summary: {
       minPrice: Math.round(minPrice),
       maxPrice: Math.round(inferredMax),
-      avgPrice: Math.round(avgPrice),
-      currency: currency || data.data.currency || getRuntimeConfig().currency
+  avgPrice: Math.round(avgPrice),
+  currency: responseCurrency
     },
     cheapestDate: cheapestEntry
       ? { date: cheapestEntry.date, price: Math.round(cheapestEntry.price) }
       : null,
     period: {
-      start: startFilter ? startFilter.toISOString().split('T')[0] : data.data.period?.start || null,
-      end: endFilter ? endFilter.toISOString().split('T')[0] : data.data.period?.end || null
+      start: startFilter ? startFilter.toISOString().split('T')[0] : calendar?.period?.start || null,
+      end: endFilter ? endFilter.toISOString().split('T')[0] : calendar?.period?.end || null
     }
   }
 }
@@ -282,13 +214,11 @@ export async function analyzePricesWithFlightSky({
   const resolvedMarket = market || runtimeConfig.market
   const resolvedLocale = locale || runtimeConfig.locale
 
-  const [fromEntityId, toEntityId] = await Promise.all([
-    resolveAirportEntityId(from, { market: resolvedMarket, locale: resolvedLocale }),
-    resolveAirportEntityId(to, { market: resolvedMarket, locale: resolvedLocale })
-  ])
+  const fromEntityId = from?.trim().toUpperCase()
+  const toEntityId = to?.trim().toUpperCase()
 
   if (!fromEntityId || !toEntityId) {
-    throw new Error('Impossible de résoudre les identifiants aéroport pour FlightSky')
+    throw new Error('Codes aéroport invalides pour FlightSky')
   }
 
   const params = {
