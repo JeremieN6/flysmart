@@ -75,10 +75,10 @@
 
     <!-- Optimal Window -->
     <div class="p-4 bg-blue-50 rounded-lg dark:bg-blue-900/20">
-      <p class="text-sm font-medium text-blue-900 dark:text-blue-300 mb-1">
+      <p class="text-sm font-medium text-blue-300 dark:text-blue-600 mb-1">
         Fenêtre d'achat optimale
       </p>
-      <p class="text-lg font-bold text-blue-900 dark:text-blue-200">
+      <p class="text-lg font-bold text-blue-300 dark:text-blue-600">
         Entre J-{{ analysis.windowMax }} et J-{{ analysis.windowMin }}
       </p>
     </div>
@@ -140,10 +140,10 @@ const messageBgClass = computed(() => {
 const messageTextClass = computed(() => {
   const status = props.analysis?.status
   const classes = {
-    early: 'text-blue-900 dark:text-blue-200',
-    stable: 'text-gray-900 dark:text-gray-200',
-    optimal: 'text-green-900 dark:text-green-200',
-    late: 'text-red-900 dark:text-red-200'
+    early: 'text-blue-900 dark:text-blue-600',
+    stable: 'text-gray-900 dark:text-gray-600',
+    optimal: 'text-green-900 dark:text-green-600',
+    late: 'text-red-900 dark:text-red-600'
   }
   return classes[status] || classes.stable
 })
