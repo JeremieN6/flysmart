@@ -1,12 +1,17 @@
 import { createRouter, createWebHistory } from 'vue-router'
+
+// Lazy loading des pages pour optimiser le bundle
+// Seule la Landing Page est chargée immédiatement
 import LandingPage from './pages/LandingPage.vue'
-import CalculateurPage from './pages/CalculateurPage.vue'
-import FonctionnalitePage from './pages/FonctionnalitePage.vue'
-import BlogPage from './pages/BlogPage.vue'
-import BlogContentPage from './pages/BlogContentPage.vue'
-import PolitiqueConfidentialitePage from './pages/PolitiqueConfidentialitePage.vue'
-import Success from './pages/stripe/Success.vue'
-import Cancel from './pages/stripe/Cancel.vue'
+
+// Les autres pages sont chargées uniquement quand l'utilisateur y accède
+const CalculateurPage = () => import('./pages/CalculateurPage.vue')
+const FonctionnalitePage = () => import('./pages/FonctionnalitePage.vue')
+const BlogPage = () => import('./pages/BlogPage.vue')
+const BlogContentPage = () => import('./pages/BlogContentPage.vue')
+const PolitiqueConfidentialitePage = () => import('./pages/PolitiqueConfidentialitePage.vue')
+const Success = () => import('./pages/stripe/Success.vue')
+const Cancel = () => import('./pages/stripe/Cancel.vue')
 
 const routes = [
   {

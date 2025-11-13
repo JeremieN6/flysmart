@@ -1,8 +1,14 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import flightRoutes from './routes/flights.js';
 import airportRoutes from './routes/airports.js';
+
+// ES module fix for __dirname
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Load environment variables
 dotenv.config();
@@ -23,9 +29,19 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok' });
 });
 
-// Routes
+// API Routes
 app.use('/api/flights', flightRoutes);
 app.use('/api/airports', airportRoutes);
+
+// Serve static files from dist folder (production)
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, 'dist')));
+  
+  // All non-API routes return the Vue app
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+  });
+}
 
 // Error handling middleware
 app.use((err, req, res, next) => {
@@ -40,4 +56,7 @@ app.use((err, req, res, next) => {
 app.listen(PORT, () => {
   console.log(`🚀 Server running on http://localhost:${PORT}`);
   console.log(`📍 Health check: http://localhost:${PORT}/health`);
+  if (process.env.NODE_ENV === 'production') {
+    console.log(`🎨 Serving static files from dist/`);
+  }
 });
