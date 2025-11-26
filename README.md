@@ -1,111 +1,144 @@
-# Flight Timing Advisor - Backend
+# FlySmart - Flight Timing Advisor
 
-Backend API for the Flight Timing Advisor application.
+Application full-stack pour analyser les prix des vols et trouver le meilleur moment pour réserver.
 
-## Setup
+## 🚀 Démarrage rapide
 
-1. Install dependencies:
+### 1. Installation
+
 ```bash
 npm install
 ```
 
-2. Create `.env.local` file (copy from `.env.example`):
+### 2. Configuration
+
+Créez un fichier `.env.local` à partir de `.env.example` :
+
 ```bash
 cp .env.example .env.local
 ```
 
-3. Configure your FlightSky (RapidAPI), Amadeus credentials, and FlightAPI key in `.env.local`:
+Configurez vos clés API dans `.env.local` :
+
 ```env
+PORT=5000
+NODE_ENV=development
+CLIENT_ORIGINS=http://localhost:5173
+
+# API Keys
 FLIGHTSKY_API_KEY=your_flightsky_rapidapi_key
-FLIGHTSKY_API_HOST=flights-sky.p.rapidapi.com
 AMADEUS_API_KEY=your_amadeus_api_key
-AMADEUS_API_SECRET_KEY=your_amadeus_api_secret
-FLIGHT_API_KEY=your_actual_api_key_here
+AMADEUS_API_SECRET=your_amadeus_api_secret
+FLIGHT_API_KEY=your_flight_api_key
 ```
 
-## Development
+### 3. Développement
 
-Start the development server with auto-reload:
+**Lancer frontend et backend ensemble** :
 ```bash
 npm run dev
 ```
 
-Start the production server:
+**Ou séparément** :
 ```bash
-npm start
+# Terminal 1 - Backend (port 5000)
+npm run server:dev
+
+# Terminal 2 - Frontend (port 5173)
+npm run client:dev
 ```
 
-The server runs on `http://localhost:5000` by default.
+### 4. Production
 
-## API Endpoints
+**Build** :
+```bash
+npm run build
+```
+
+**Démarrer en production** :
+```bash
+NODE_ENV=production npm start
+```
+
+Le serveur servira automatiquement les fichiers statiques du dossier `dist/`.
+
+## 📁 Structure du projet
+
+```
+flysmart/
+├── package.json              # Dépendances unifiées
+├── server.js                 # Serveur Express
+├── vite.config.js           # Configuration Vite
+├── tailwind.config.js       # Configuration Tailwind
+├── index.html               # Point d'entrée HTML
+├── src/                     # Code source Vue.js
+│   ├── App.vue
+│   ├── main.js
+│   ├── router.js
+│   ├── components/
+│   ├── pages/
+│   └── services/
+├── controllers/             # Controllers API
+├── routes/                  # Routes Express
+├── services-backend/        # Services backend
+├── scripts/                 # Scripts utilitaires
+└── dist/                    # Build production (généré)
+```
+
+## 🔌 API Endpoints
 
 ### Health Check
 ```
 GET /health
-Response: { "status": "ok" }
 ```
 
-### Get Flight Prices
+### Recherche de prix
 ```
-GET /api/flights/prices?from=CDG&to=JFK&date=2025-12-01&passengers=1&currency=EUR&cabin=Economy&children=0&infants=0
+GET /api/flights/prices?from=CDG&to=JFK&startDate=2025-12-01&endDate=2025-12-15&currency=EUR
 
-Parameters:
-- from (required): Departure airport IATA code (3 letters)
-- to (required): Arrival airport IATA code (3 letters)
-- date (required): Departure date (YYYY-MM-DD format)
-- passengers (optional): Number of adult passengers (default: 1)
-- currency (optional): Price currency (default: EUR)
-- cabin (optional): Cabin class - Economy/Business/First (default: Economy)
-- children (optional): Number of children (default: 0)
-- infants (optional): Number of infants (default: 0)
-
-Response:
-{
-  "route": {
-    "from": "CDG",
-    "to": "JFK",
-    "date": "2025-12-01",
-    "currency": "EUR",
-    "cabin": "Economy"
-  },
-  "prices": [
-    { "daysBefore": 60, "price": 790 },
-    { "daysBefore": 45, "price": 740 },
-    { "daysBefore": 30, "price": 670 },
-    { "daysBefore": 21, "price": 685 },
-    { "daysBefore": 14, "price": 720 },
-    { "daysBefore": 7, "price": 780 },
-    { "daysBefore": 3, "price": 850 }
-  ],
-  "fallback": false
-}
+Paramètres :
+- from (required): Code IATA aéroport de départ (3 lettres)
+- to (required): Code IATA aéroport d'arrivée (3 lettres)
+- startDate (required): Date de début (YYYY-MM-DD)
+- endDate (required): Date de fin (YYYY-MM-DD)
+- currency (optional): Devise (EUR, USD, etc.)
+- cabin (optional): Classe (Economy, Business, First)
 ```
 
-## Features
+### Recherche d'aéroports
+```
+GET /api/airports/search?query=paris
 
-- **FlightSky Integration**: Uses RapidAPI FlightSky calendar data for multi-day price insights
-- **Smart Fallback**: Generates realistic mock data (FlightAPI-based) when external APIs are unavailable
-- **Caching**: 30-minute cache to reduce API calls and improve performance
-- **Error Handling**: Graceful degradation with meaningful error messages
-- **CORS**: Configured for frontend integration
+Paramètres :
+- query (required): Nom de ville, aéroport ou code IATA
+```
 
-## Configuration
+## 📦 Scripts disponibles
 
-All configuration is managed through environment variables:
+- `npm run dev` - Lance frontend + backend ensemble
+- `npm run server:dev` - Backend seul avec nodemon
+- `npm run server` - Backend en production
+- `npm run client:dev` - Frontend seul avec Vite
+- `npm run client:build` - Build du frontend
+- `npm run build` - Alias pour build
+- `npm start` - Démarrage production
 
-- `PORT`: Server port (default: 5000)
-- `NODE_ENV`: Environment mode (development/production)
-- `CLIENT_ORIGINS`: Allowed CORS origins (comma-separated)
-- `FLIGHT_API_BASE_URL`: FlightAPI base URL
-- `FLIGHT_API_KEY`: Your FlightAPI key
-- `FLIGHT_API_CURRENCY`: Default currency (EUR, USD, etc.)
-- `FLIGHT_API_CABIN_CLASS`: Default cabin class (Economy, Business, First)
-- `FLIGHT_API_CHILDREN`: Default number of children
-- `FLIGHT_API_INFANTS`: Default number of infants
+## 🌐 Déploiement
 
-## Security
+Voir [DEPLOYMENT.md](./DEPLOYMENT.md) pour les instructions détaillées de déploiement sur Hostinger ou autres hébergeurs.
 
-- API keys are stored server-side only (never exposed to frontend)
-- CORS configured with specific origins
-- Input validation on all parameters
-- No sensitive data in repository (.env.local is gitignored)
+## 🔒 Sécurité
+
+- Les clés API sont stockées côté serveur uniquement
+- CORS configuré avec origines spécifiques
+- Validation des entrées sur tous les paramètres
+- Pas de données sensibles dans le dépôt
+
+## 📝 Fonctionnalités
+
+- **Intégration FlightSky** : Données de prix en temps réel
+- **Fallback intelligent** : Génération de données de secours
+- **Cache** : Cache de 30 minutes pour optimiser les performances
+- **Gestion d'erreurs** : Dégradation gracieuse avec messages explicites
+- **Vue.js 3** : Interface moderne et réactive
+- **Tailwind CSS** : Design responsive

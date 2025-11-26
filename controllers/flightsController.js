@@ -1,5 +1,5 @@
-import { analyzePricesWithFlightSky } from '../services/flightsSkyService.js'
-import { fetchFlightPrices } from '../services/flightApiService.js'
+import { analyzePricesWithFlightSky } from '../services-backend/flightsSkyService.js'
+import { fetchFlightPrices } from '../services-backend/flightApiService.js'
 
 /**
  * Analyser les prix de vols pour une période donnée

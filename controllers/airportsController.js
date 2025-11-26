@@ -1,4 +1,4 @@
-import { searchAirports } from '../services/airportSearchService.js'
+import { searchAirports } from '../services-backend/airportSearchService.js'
 
 /**
  * Recherche d'aéroports par ville, nom ou code IATA
