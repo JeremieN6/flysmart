@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import LandingPage from './pages/LandingPage.vue'
 import CalculateurPage from './pages/CalculateurPage.vue'
+import GoogleCalendarPage from './pages/GoogleCalendarPage.vue'
 import FonctionnalitePage from './pages/FonctionnalitePage.vue'
 import BlogPage from './pages/BlogPage.vue'
 import BlogContentPage from './pages/BlogContentPage.vue'
@@ -23,6 +24,14 @@ const routes = [
     meta: {
       title: 'FlySmart | Analysez les prix',
       description: 'Analysez les prix des vols et trouvez la fenêtre d\'achat optimale pour votre voyage.'
+    }
+  },
+  {
+    path: '/calculateur-google',
+    component: GoogleCalendarPage,
+    meta: {
+      title: 'FlySmart | Calendrier Google Flights',
+      description: 'Consultez le calendrier de prix aller-retour fourni par l\'API Google Flights via RapidAPI.'
     }
   },
     { path: '/fonctionnalites', component: FonctionnalitePage,

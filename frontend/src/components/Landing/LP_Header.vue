@@ -41,6 +41,11 @@
                 Calculateur
               </RouterLink>
             </li>
+            <li>
+              <RouterLink to="/calculateur-google" class="block py-2 pr-4 pl-3 text-gray-700 hover:text-blue-700 lg:p-0 dark:text-gray-400">
+                Google Flights
+              </RouterLink>
+            </li>
           </ul>
         </div>
     </nav>

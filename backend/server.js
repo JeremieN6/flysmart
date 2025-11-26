@@ -3,6 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import flightRoutes from './routes/flights.js';
 import airportRoutes from './routes/airports.js';
+import googleRoutes from './routes/google.js';
 
 // Load environment variables
 dotenv.config();
@@ -26,6 +27,7 @@ app.get('/health', (req, res) => {
 // Routes
 app.use('/api/flights', flightRoutes);
 app.use('/api/airports', airportRoutes);
+app.use('/api/google', googleRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

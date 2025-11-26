@@ -14,6 +14,9 @@
                 <RouterLink to="/calculateur" class="mr-4 hover:underline md:mr-6">Calculateur</RouterLink>
             </li>
             <li>
+                <RouterLink to="/calculateur-google" class="mr-4 hover:underline md:mr-6">Google Flights</RouterLink>
+            </li>
+            <li>
                 <RouterLink to="/fonctionnalites" class="mr-4 hover:underline md:mr-6 ">Fonctionnalités</RouterLink>
             </li>
             <li>
