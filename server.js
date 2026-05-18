@@ -54,11 +54,29 @@ app.use((err, req, res, next) => {
   });
 });
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
-  console.log(`📍 Health check: http://localhost:${PORT}/health`);
-  if (process.env.NODE_ENV === 'production') {
-    console.log(`🎨 Serving static files from dist/`);
-  }
-});
+// Start server with automatic fallback if the port is already in use
+function startServer(port, attemptsLeft = 5) {
+  const server = app.listen(port);
+
+  server.on('listening', () => {
+    console.log(`🚀 Server running on http://localhost:${port}`);
+    console.log(`📍 Health check: http://localhost:${port}/health`);
+    if (process.env.NODE_ENV === 'production') {
+      console.log(`🎨 Serving static files from dist/`);
+    }
+  });
+
+  server.on('error', (err) => {
+    if (err && err.code === 'EADDRINUSE' && attemptsLeft > 0) {
+      const nextPort = Number(port) + 1;
+      console.warn(`Port ${port} is in use, trying ${nextPort}...`);
+      setTimeout(() => startServer(nextPort, attemptsLeft - 1), 200);
+      return;
+    }
+
+    console.error(err);
+    process.exit(1);
+  });
+}
+
+startServer(Number(PORT) || 5000);
