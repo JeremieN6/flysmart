@@ -35,3 +35,10 @@ Thumbs.db
 /projet-similaire
 /docs
 /frontend/src/assets/data/airport-codes-api.txt
+
+
+# Fichiers et dossiers temporaire
+/tmp
+*.tmp
+/backend/tmp
+/backup/*
