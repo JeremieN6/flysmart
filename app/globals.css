@@ -1,0 +1,90 @@
+@import "tailwindcss";
+
+/* ────────────────────────────────────────────────────────────────────────────
+   Design tokens – FlySmart
+──────────────────────────────────────────────────────────────────────────── */
+:root {
+  --midnight:     #0D1B2A;
+  --navy-mid:     #111B35;
+  --navy-deep:    #080C18;
+  --amber:        #E8A330;
+  --amber-light:  #F6C978;
+  --amber-dark:   #C4842A;
+  --cream:        #F2EDE4;
+  --steel-light:  #BAC7E2;
+  --steel:        #6B7FA8;
+  --green-ok:     #4ADE80;
+  --red-alert:    #EF4444;
+  --orange-mid:   #F97316;
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   Fonts – Cormorant Garamond (display) + DM Sans (body)
+──────────────────────────────────────────────────────────────────────────── */
+
+html {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--midnight);
+  color: var(--cream);
+  scroll-behavior: smooth;
+}
+
+.font-display {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   Animations
+──────────────────────────────────────────────────────────────────────────── */
+@keyframes twinkle {
+  0%, 100% { opacity: 0.15; transform: scale(1); }
+  50%       { opacity: 0.7;  transform: scale(1.4); }
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.fade-up {
+  animation: fadeUp 0.7s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+.delay-100 { animation-delay: 100ms; }
+.delay-200 { animation-delay: 200ms; }
+.delay-300 { animation-delay: 300ms; }
+.delay-400 { animation-delay: 400ms; }
+.delay-600 { animation-delay: 600ms; }
+
+/* Reveal (IntersectionObserver) */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.reveal.in-view {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   Scrollbar
+──────────────────────────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--navy-deep); }
+::-webkit-scrollbar-thumb { background: var(--steel); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--amber); }
+
+/* ────────────────────────────────────────────────────────────────────────────
+   Utility helpers
+──────────────────────────────────────────────────────────────────────────── */
+.gradient-amber {
+  background: linear-gradient(135deg, var(--amber) 0%, var(--amber-dark) 100%);
+}
+.border-panel { border: 1px solid rgba(107, 127, 168, 0.15); }
+.bg-panel     { background: rgba(17, 27, 53, 0.7); }
+.bg-deep      { background: rgba(8, 12, 24, 0.6); }

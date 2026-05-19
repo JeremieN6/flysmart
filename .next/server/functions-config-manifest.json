@@ -1,0 +1,9 @@
+{
+  "version": 1,
+  "functions": {
+    "/checkout": {},
+    "/api/analyze": {},
+    "/api/price-trends": {},
+    "/api/flight-prices": {}
+  }
+}
