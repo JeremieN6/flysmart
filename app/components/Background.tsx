@@ -2,10 +2,10 @@
    Fond étoilé + arc SVG décoratif, réutilisables sur chaque page
 ───────────────────────────────────────────────────────────── */
 export function Stars() {
-  const stars = Array.from({ length: 40 }, (_, i) => ({
+  const stars = Array.from({ length: 60 }, (_, i) => ({
     left: `${((i * 37 + 13) % 100)}%`,
     top:  `${((i * 23 + 7)  % 60)}%`,
-    size: 0.5 + (i % 7) * 0.25,
+    size: 1 + (i % 7) * 0.45,
     delay: `${(i % 10) * 0.4}s`,
     duration: `${2 + (i % 30) * 0.1}s`,
   }))
@@ -23,7 +23,7 @@ export function Stars() {
             height: `${s.size}px`,
             background: 'white',
             animation: `twinkle ${s.duration} ease-in-out infinite ${s.delay}`,
-            opacity: 0.2,
+            opacity: 0.55,
           }}
         />
       ))}
@@ -39,19 +39,19 @@ export function ArcSVG() {
         viewBox="0 0 1200 400"
         fill="none"
         preserveAspectRatio="none"
-        style={{ top: '-5%', height: '55vh', opacity: 0.12 }}
+        style={{ top: '-5%', height: '55vh', opacity: 0.40 }}
       >
         <path
           d="M-100 350 C 200 50, 600 20, 900 120 C 1050 170, 1150 200, 1300 180"
           stroke="url(#arcGrad)"
           strokeDasharray="8 6"
-          strokeWidth="1.5"
+          strokeWidth="2.5"
         />
         <path
           d="M-50 380 C 250 80, 650 30, 950 140 C 1100 190, 1200 230, 1350 200"
           stroke="url(#arcGrad2)"
           strokeDasharray="4 8"
-          strokeWidth="0.8"
+          strokeWidth="1.5"
         />
         <defs>
           <linearGradient id="arcGrad" x1="0%" y1="0%" x2="100%" y2="0%">
