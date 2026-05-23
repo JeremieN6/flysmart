@@ -1,38 +1,29 @@
 {
   "name": "flysmart",
   "version": "1.0.0",
-  "description": "Flight Timing Advisor - Full Stack Application",
-  "main": "server.js",
-  "type": "module",
+  "private": true,
   "scripts": {
-    "dev": "concurrently \"npm run server:dev\" \"npm run client:dev\"",
-    "server:dev": "nodemon server.js",
-    "server": "node server.js",
-    "client:dev": "vite",
-    "client:build": "vite build",
-    "client:preview": "vite preview",
-    "build": "vite build",
-    "start": "node server.js"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
   },
-  "keywords": ["flight", "pricing", "api", "vue", "express"],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
-    "express": "^4.18.2",
-    "axios": "^1.6.2",
-    "dotenv": "^16.3.1",
-    "cors": "^2.8.5",
-    "node-cache": "^5.1.2",
-    "vue": "^3.5.13",
-    "vue-router": "^4.5.1",
-    "flowbite-vue": "^0.2.2",
-    "vue3-apexcharts": "^1.5.3"
+    "next": "^15.3.2",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "recharts": "^2.15.3",
+    "stripe": "^17.7.0",
+    "axios": "^1.6.2"
   },
   "devDependencies": {
-    "nodemon": "^3.0.2",
-    "@vitejs/plugin-vue": "^5.2.3",
-    "@tailwindcss/vite": "^4.1.7",
-    "vite": "^6.3.5",
-    "concurrently": "^8.2.2"
+    "@types/node": "^22.15.18",
+    "@types/react": "^19.1.5",
+    "@types/react-dom": "^19.1.5",
+    "typescript": "^5.8.3",
+    "@tailwindcss/postcss": "^4.1.7",
+    "tailwindcss": "^4.1.7",
+    "postcss": "^8.5.3"
   }
 }
+

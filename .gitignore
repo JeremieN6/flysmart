@@ -12,6 +12,9 @@ pnpm-lock.yaml
 # Build outputs
 dist/
 build/
+.next/
+.nuxt/
+out/
 *.log
 
 # IDE
