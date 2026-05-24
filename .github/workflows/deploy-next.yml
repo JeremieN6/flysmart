@@ -30,6 +30,11 @@ jobs:
           git fetch --all --prune
           git reset --hard origin/main
           npm ci
+          rm -rf .next
           npm run build
-          pm2 reload flysmart-next --update-env
+          if pm2 describe flysmart-next > /dev/null 2>&1; then
+            pm2 reload flysmart-next --update-env
+          else
+            pm2 start ecosystem.next.config.js
+          fi
           EOF
