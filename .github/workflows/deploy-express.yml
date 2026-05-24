@@ -1,0 +1,37 @@
+name: Deploy Flysmart Express
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: webfactory/ssh-agent@v0.6.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Add VPS to known_hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H "${{ secrets.VPS_HOST }}" >> ~/.ssh/known_hosts
+
+      - name: Deploy Express + Vue
+        run: |
+          ssh -o StrictHostKeyChecking=yes ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} << 'EOF'
+          set -euo pipefail
+          cd /srv/saas/flysmart
+          git fetch --all --prune
+          git reset --hard origin/main
+          cd src-vue
+          npm ci
+          npm run build
+          cd ..
+          pm2 reload flysmart-express --update-env
+          EOF
