@@ -35,9 +35,9 @@ function getAllStaticPageRoutes(): string[] {
 
       const segments = rawSegments
         .filter((segment) => !(segment.startsWith('(') && segment.endsWith(')')))
-        .filter((segment) => segment !== 'api' && segment !== 'admin')
+        .filter((segment) => segment !== 'api' && segment !== 'admin' && segment !== 'checkout')
 
-      if (rawSegments.includes('api') || rawSegments.includes('admin')) continue
+      if (rawSegments.includes('api') || rawSegments.includes('admin') || rawSegments.includes('checkout')) continue
 
       const route = segments.length === 0 ? '/' : `/${segments.join('/')}`
       routes.add(route)
