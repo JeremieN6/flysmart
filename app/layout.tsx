@@ -29,6 +29,9 @@ export const metadata: Metadata = {
     description:
       'Intégrez FlySmart en 5 minutes. Différenciez-vous, économisez sur les déplacements, monétisez votre audience.',
   },
+  verification: {
+    google: 'dS4lDtb3GkUFSthFb5DQkzfwTUYCP_dKFWE5m1s7V8E',
+  },
   icons: { icon: '/favicon.ico' },
 }
 
