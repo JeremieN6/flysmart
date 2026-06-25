@@ -20,7 +20,7 @@ echo.
 
 echo [3/3] Demarrage du serveur...
 echo.
-echo L'application sera disponible sur http://localhost:5000
+echo L'application sera disponible sur http://localhost:3000
 echo Appuyez sur Ctrl+C pour arreter le serveur
 echo.
 

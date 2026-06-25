@@ -64,5 +64,20 @@ export async function POST(req: NextRequest) {
 
   const analysis = analyzePrice(origin, destination, basePrice, source)
 
-  return NextResponse.json(analysis, { headers: CORS_HEADERS })
+  return NextResponse.json(
+    {
+      ...analysis,
+      meta: {
+        dataSource: analysis.source,
+        isFallback: analysis.source === 'model'
+      }
+    },
+    {
+      headers: {
+        ...CORS_HEADERS,
+        'X-FlySmart-Data-Source': analysis.source,
+        'X-FlySmart-Fallback': String(analysis.source === 'model')
+      }
+    }
+  )
 }

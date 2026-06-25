@@ -1,144 +1,82 @@
-# FlySmart - Flight Timing Advisor
+# FlySmart - Next.js Flight Timing Advisor
 
-Application full-stack pour analyser les prix des vols et trouver le meilleur moment pour réserver.
+Application Next.js (App Router) pour analyser le meilleur moment d'achat de vols.
 
-## 🚀 Démarrage rapide
+## Architecture
 
-### 1. Installation
+Le projet est maintenant **homogene en Next.js**:
+
+- Frontend: pages `app/`
+- API serveur: routes `app/api/*`
+- Services metier/API externes: `services-backend/` et `lib/`
+
+Le code Express legacy a ete retire.
+
+## Demarrage
+
+### Developpement
 
 ```bash
 npm install
-```
-
-### 2. Configuration
-
-Créez un fichier `.env.local` à partir de `.env.example` :
-
-```bash
-cp .env.example .env.local
-```
-
-Configurez vos clés API dans `.env.local` :
-
-```env
-PORT=5000
-NODE_ENV=development
-CLIENT_ORIGINS=http://localhost:5173
-
-# API Keys
-FLIGHTSKY_API_KEY=your_flightsky_rapidapi_key
-AMADEUS_API_KEY=your_amadeus_api_key
-AMADEUS_API_SECRET=your_amadeus_api_secret
-FLIGHT_API_KEY=your_flight_api_key
-```
-
-### 3. Développement
-
-**Lancer frontend et backend ensemble** :
-```bash
 npm run dev
 ```
 
-**Ou séparément** :
+Application: `http://localhost:3000`
+
+### Production locale
+
 ```bash
-# Terminal 1 - Backend (port 5000)
-npm run server:dev
-
-# Terminal 2 - Frontend (port 5173)
-npm run client:dev
-```
-
-### 4. Production
-
-**Build** :
-```bash
+npm install
 npm run build
+npm start
 ```
 
-**Démarrer en production** :
-```bash
-NODE_ENV=production npm start
+## Variables d'environnement
+
+Configurer `.env.local` (exemple minimal):
+
+```env
+NODE_ENV=development
+PORT=3000
+
+AMADEUS_API_KEY=...
+AMADEUS_API_SECRET_KEY=...
+FLIGHTSKY_API_KEY=...
+FLIGHTSKY_API_HOST=flights-sky.p.rapidapi.com
+GOOGLE_FLIGHTS_API_KEY=...
+GOOGLE_FLIGHTS_API_HOST=flights-sky.p.rapidapi.com
 ```
 
-Le serveur servira automatiquement les fichiers statiques du dossier `dist/`.
+## Endpoints principaux
 
-## 📁 Structure du projet
+- `GET /api/price-trends`
+- `GET /api/flight-prices`
+- `POST /api/analyze`
+- `GET /api/flights/prices`
+- `GET /api/airports/search`
+- `GET /api/google/price-calendar`
 
-```
-flysmart/
-├── package.json              # Dépendances unifiées
-├── server.js                 # Serveur Express
-├── vite.config.js           # Configuration Vite
-├── tailwind.config.js       # Configuration Tailwind
-├── index.html               # Point d'entrée HTML
-├── src/                     # Code source Vue.js
-│   ├── App.vue
-│   ├── main.js
-│   ├── router.js
-│   ├── components/
-│   ├── pages/
-│   └── services/
-├── controllers/             # Controllers API
-├── routes/                  # Routes Express
-├── services-backend/        # Services backend
-├── scripts/                 # Scripts utilitaires
-└── dist/                    # Build production (généré)
-```
+## Transparence des donnees (reel vs fallback)
 
-## 🔌 API Endpoints
+Les endpoints d'analyse exposent un signal discret:
 
-### Health Check
-```
-GET /health
+- Header `X-FlySmart-Data-Source`: source utilisee (`amadeus`, `model`, `flightsky`, `fallback`)
+- Header `X-FlySmart-Fallback`: `true` ou `false`
+- Champ JSON `meta`:
+
+```json
+{
+  "meta": {
+    "dataSource": "flightsky",
+    "isFallback": false
+  }
+}
 ```
 
-### Recherche de prix
-```
-GET /api/flights/prices?from=CDG&to=JFK&startDate=2025-12-01&endDate=2025-12-15&currency=EUR
+Cela permet d'afficher un indicateur discret cote UI sans perturber le parcours.
 
-Paramètres :
-- from (required): Code IATA aéroport de départ (3 lettres)
-- to (required): Code IATA aéroport d'arrivée (3 lettres)
-- startDate (required): Date de début (YYYY-MM-DD)
-- endDate (required): Date de fin (YYYY-MM-DD)
-- currency (optional): Devise (EUR, USD, etc.)
-- cabin (optional): Classe (Economy, Business, First)
-```
+## Etat du projet
 
-### Recherche d'aéroports
-```
-GET /api/airports/search?query=paris
-
-Paramètres :
-- query (required): Nom de ville, aéroport ou code IATA
-```
-
-## 📦 Scripts disponibles
-
-- `npm run dev` - Lance frontend + backend ensemble
-- `npm run server:dev` - Backend seul avec nodemon
-- `npm run server` - Backend en production
-- `npm run client:dev` - Frontend seul avec Vite
-- `npm run client:build` - Build du frontend
-- `npm run build` - Alias pour build
-- `npm start` - Démarrage production
-
-## 🌐 Déploiement
-
-Voir [DEPLOYMENT.md](./DEPLOYMENT.md) pour les instructions détaillées de déploiement sur Hostinger ou autres hébergeurs.
-
-## 🔒 Sécurité
-
-- Les clés API sont stockées côté serveur uniquement
-- CORS configuré avec origines spécifiques
-- Validation des entrées sur tous les paramètres
-- Pas de données sensibles dans le dépôt
-
-## 📝 Fonctionnalités
-
-- **Intégration FlightSky** : Données de prix en temps réel
-- **Fallback intelligent** : Génération de données de secours
-- **Cache** : Cache de 30 minutes pour optimiser les performances
-- **Gestion d'erreurs** : Dégradation gracieuse avec messages explicites
-- **Vue.js 3** : Interface moderne et réactive
-- **Tailwind CSS** : Design responsive
+- Architecture active: Next.js only
+- Dossier `backend/`: conserve tel quel (pas utilise par le runtime actuel)
+- Dossier `src-vue/`: legacy, non utilise par le runtime Next.js

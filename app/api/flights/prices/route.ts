@@ -211,9 +211,18 @@ export async function GET(req: NextRequest) {
         cabin
       },
       route,
+      meta: {
+        dataSource: source,
+        isFallback: source === 'fallback'
+      },
       prices: timeline,
       summary,
       cheapestDate
+    }, {
+      headers: {
+        'X-FlySmart-Data-Source': source,
+        'X-FlySmart-Fallback': String(source === 'fallback')
+      }
     })
   } catch (error: unknown) {
     const status = typeof error === 'object' && error && 'status' in error

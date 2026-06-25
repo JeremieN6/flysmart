@@ -49,5 +49,19 @@ export async function GET(req: NextRequest) {
 
   const analysis = analyzePrice(origin, destination, basePrice, source)
 
-  return NextResponse.json(analysis)
+  return NextResponse.json(
+    {
+      ...analysis,
+      meta: {
+        dataSource: analysis.source,
+        isFallback: analysis.source === 'model'
+      }
+    },
+    {
+      headers: {
+        'X-FlySmart-Data-Source': analysis.source,
+        'X-FlySmart-Fallback': String(analysis.source === 'model')
+      }
+    }
+  )
 }
