@@ -21,8 +21,16 @@ export function loadAirports() {
   if (isLoaded) return
 
   try {
-    // Chemin vers le fichier JSON (maintenant dans src/assets)
-    const jsonPath = path.join(__dirname, '../src/assets/data/airport-codes.json')
+    // Le dataset peut exister dans src-vue (historique) ou src (future migration)
+    const datasetCandidates = [
+      path.join(__dirname, '../src-vue/assets/data/airport-codes.json'),
+      path.join(__dirname, '../src/assets/data/airport-codes.json')
+    ]
+    const jsonPath = datasetCandidates.find(filePath => fs.existsSync(filePath))
+
+    if (!jsonPath) {
+      throw new Error('Fichier airport-codes.json introuvable (src-vue/assets/data ou src/assets/data)')
+    }
 
     console.log('📍 Chargement des données d\'aéroports...')
     let rawData = fs.readFileSync(jsonPath, 'utf-8')
@@ -58,8 +66,13 @@ export function loadAirports() {
       }, [])
 
     // Ajouter une liste de hubs internationaux si absents du dataset principal
-    const curatedPath = path.join(__dirname, '../src/assets/data/airports-min.json')
-    if (fs.existsSync(curatedPath)) {
+    const curatedCandidates = [
+      path.join(__dirname, '../src-vue/assets/data/airports-min.json'),
+      path.join(__dirname, '../src/assets/data/airports-min.json')
+    ]
+    const curatedPath = curatedCandidates.find(filePath => fs.existsSync(filePath))
+
+    if (curatedPath && fs.existsSync(curatedPath)) {
       try {
         const curatedAirports = JSON.parse(fs.readFileSync(curatedPath, 'utf-8'))
 
