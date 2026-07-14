@@ -1,4 +1,9 @@
-# Dependencies
+node_modules
+.next
+.env.local
+.env.*.local
+data/*.sqlite
+data/*.sqlite-*# Dependencies
 node_modules/
 package-lock.json
 yarn.lock
