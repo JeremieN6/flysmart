@@ -137,24 +137,24 @@ const TESTIMONIALS = [
 
 const FAQ = [
   {
-    q: "Comment FlySmart predit-il les prix ?",
-    a: "Notre modèle analyse les courbes empiriques de prix sur 12 semaines avant le départ, combinées aux données Amadeus en temps réel quand disponibles. Nous identifions la fenêtre où les prix sont historiquement les plus bas.",
+    q: "Comment FlySmart génère sa recommandation d'achat ?",
+    a: "FlySmart combine les tendances historiques de prix, les signaux de marché disponibles et votre route pour indiquer une fenêtre d'achat recommandée. L'objectif est de vous aider à décider plus vite, même sans expertise voyage.",
   },
   {
-    q: "Mon widget fonctionnera-t-il sur WordPress ?",
-    a: "Oui. Le widget est un Web Component en JavaScript sans dépendances. Il fonctionne sur WordPress, Webflow, Wix, Squarespace ou HTML pur.",
+    q: "FlySmart vend-il les billets d'avion ?",
+    a: "Non. FlySmart est un outil d'aide à la décision : nous vous aidons à choisir le bon timing d'achat, puis vous finalisez la réservation dans vos canaux habituels.",
   },
   {
     q: "Comment FlySmart calcule les économies affichées ?",
-    a: "Nous comparons le prix recommandé par FlySmart avec le prix constaté à la date où vous étiez sur le point d'acheter. Ce montant reste un indicateur d'aide au pilotage.",
+    a: "Nous comparons le prix dans la fenêtre recommandée avec un scénario d'achat plus tardif sur le même trajet. Les montants affichés sont des économies estimées, utiles pour piloter les décisions mais non contractuelles.",
   },
   {
-    q: "Puis-je tester avant de m'abonner ?",
-    a: "Oui. Vous pouvez analyser des vols directement sur notre page /analyse puis demander une démo guidée sur vos derniers déplacements.",
+    q: "Que contient le plan Pro par rapport au Starter ?",
+    a: "Le plan Pro inclut tout Starter, avec en plus le partage de recommandation pour validation manager, le mode multi-utilisateurs et un support prioritaire.",
   },
   {
-    q: "Quelle est la precision des recommandations ?",
-    a: "Notre fenêtre optimale est confirmée dans 85% des cas analysés, sur la base de 3 ans d'observations réelles sur plus de 200 routes.",
+    q: "Puis-je tester FlySmart avant abonnement ?",
+    a: "Oui. Vous pouvez lancer une première analyse sur la page d'analyse, puis demander une démo guidée sur vos trajets récents pour valider l'usage avec votre équipe.",
   },
 ];
 
