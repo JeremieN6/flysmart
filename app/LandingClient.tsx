@@ -71,7 +71,7 @@ const LANDING_PRICING = [
     price: "Sur devis",
     period: "",
     subtitle: "Pour les volumes importants et organisations multi-sites",
-    features: ["Contact commercial dedie"],
+    features: ["Contact commercial dédié", "Intégration API"],
     cta: "Parler à l'équipe",
     highlight: false,
   },
