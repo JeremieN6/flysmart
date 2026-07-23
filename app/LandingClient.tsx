@@ -20,17 +20,17 @@ const INITIAL_DEMO_FORM = {
 /* ─── données statiques ─────────────────────────────────────────── */
 const ICP_PROBLEMS = [
   {
-    title: "Je ne sais jamais si le prix va monter ou descendre",
+    title: "Je ne sais jamais si le prix va monter ou descendre ... et je perds un temps fou à comparer",
     response:
-      "FlySmart vous donne une recommandation claire: acheter maintenant ou attendre, avec une fenêtre de timing lisible.",
+      "FlySmart vous donne une recommandation claire : acheter maintenant ou attendre, avec une fenêtre de timing lisible.",
   },
   {
-    title: "Le temps que le budget soit valide, le prix a deja change",
+    title: "Le temps que le budget soit validé, le prix a déjà changé",
     response:
       "FlySmart affiche une deadline d'action et vous aide à décider avant que la fenêtre idéale se referme.",
   },
   {
-    title: "Je ne suis pas specialiste du voyage, je fais au mieux",
+    title: "Je ne suis pas specialiste du voyage, donc je fais au mieux",
     response:
       "FlySmart traduit les données prix en décisions simples, pour éviter de vous tromper même sans expertise voyage.",
   },
@@ -471,7 +471,7 @@ export default function LandingClient() {
                 className="text-xs font-medium tracking-widest uppercase text-center mb-3"
                 style={{ color: "var(--amber)" }}
               >
-                Persona cible unique
+                À qui s'adresse FlySmart
               </p>
               <h2
                 className="text-3xl md:text-4xl font-semibold text-center mb-16"
@@ -519,6 +519,19 @@ export default function LandingClient() {
                   </p>
                 </div>
               </Reveal>
+            </div>
+
+            <div>
+              <h2
+                className="text-3xl md:text-4xl font-semibold text-center mb-16"
+                style={{
+                  color: "var(--cream)",
+                  fontFamily: "var(--font-display)",
+                }}
+              >
+                Vous vous êtes déjà retrouvé dans ces situations
+                <span style={{ color: "var(--amber)" }}> pénibles </span>
+              </h2>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
