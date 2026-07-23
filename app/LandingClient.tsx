@@ -49,6 +49,7 @@ const LANDING_PRICING = [
       "Historique des économies estimées réalisées",
     ],
     cta: "Choisir Starter",
+    ctaHref: "/checkout?plan=starter",
     highlight: false,
   },
   {
@@ -64,6 +65,7 @@ const LANDING_PRICING = [
       "Support prioritaire",
     ],
     cta: "Choisir Pro",
+    ctaHref: "/checkout?plan=pro",
     highlight: true,
   },
   {
@@ -73,6 +75,7 @@ const LANDING_PRICING = [
     subtitle: "Pour les volumes importants et organisations multi-sites",
     features: ["Contact commercial dédié", "Intégration API"],
     cta: "Parler à l'équipe",
+    ctaHref: "/tarifs",
     highlight: false,
   },
 ];
@@ -602,7 +605,7 @@ export default function LandingClient() {
                         ))}
                       </ul>
                       <a
-                        href="#contact-demo"
+                        href={plan.ctaHref}
                         className="w-full py-3 rounded-xl text-sm font-semibold text-center block"
                         style={i === 1
                           ? { background: "linear-gradient(135deg, rgb(232, 163, 48) 0%, rgb(196, 132, 42) 100%)", color: "rgb(8, 12, 24)" }
