@@ -18,3 +18,9 @@
 ## Lecons
 
 <!-- Les entrees seront ajoutees ici au fil du temps -->
+
+### 2026-07-23 Deploy npm ci et lockfile
+**Probleme** : Le workflow de deploiement Next cassait pendant l'installation des dependances.
+**Cause racine** : `npm ci` exige un `package-lock.json` committé et synchronise; ici le repo de deploy ne fournissait pas un lockfile stable dans `HEAD`.
+**Solution** : Remplacer `npm ci` par `npm install` dans le workflow de deploiement.
+**Regle** : Si le lockfile n'est pas versionne de facon fiable, ne pas utiliser `npm ci` en deploiement; sinon committer le lockfile et garder `npm ci`.
