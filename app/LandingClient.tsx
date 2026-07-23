@@ -471,7 +471,7 @@ export default function LandingClient() {
                 className="text-xs font-medium tracking-widest uppercase text-center mb-3"
                 style={{ color: "var(--amber)" }}
               >
-                À qui s'adresse FlySmart
+                À qui s'adresse FlySmart ?
               </p>
               <h2
                 className="text-3xl md:text-4xl font-semibold text-center mb-16"
@@ -485,7 +485,7 @@ export default function LandingClient() {
               </h2>
             </Reveal>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-10">
+            <div className="flex flex-col lg:flex-col gap-6 mb-10">
               <Reveal delay={80}>
                 <div
                   className="rounded-2xl p-7"
@@ -529,8 +529,8 @@ export default function LandingClient() {
                   fontFamily: "var(--font-display)",
                 }}
               >
-                Vous vous êtes déjà retrouvé dans ces situations
-                <span style={{ color: "var(--amber)" }}> pénibles </span>
+                Vous êtes-vous déjà retrouvé dans ces situations
+                <span style={{ color: "var(--amber)" }}> pénibles ?</span>
               </h2>
             </div>
 
