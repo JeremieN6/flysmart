@@ -5,9 +5,13 @@
 ---
 
 ## En cours
-- [ ] ...
+- [x] Refonte landing ICP unique PME (hero, problemes, partage validation)
+- [x] Remplacement des anciens plans 149/199/49 par Starter 99 / Pro 199 / Enterprise sur devis
+- [x] Mise a jour FAQ + temoignages axes terrain et credibilite des economies
+- [ ] Validation wording final (ton legal sur "economies estimees")
 
 ## Revue
+- [x] Verification erreurs VS Code sur fichiers modifies (`get_errors`)
 - [x] `npx tsc --noEmit`
 - [x] `npm run build`
 

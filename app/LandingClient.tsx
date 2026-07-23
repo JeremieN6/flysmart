@@ -18,55 +18,62 @@ const INITIAL_DEMO_FORM = {
 };
 
 /* ─── données statiques ─────────────────────────────────────────── */
-const SEGMENTS = [
+const ICP_PROBLEMS = [
   {
-    icon: "🏢",
-    title: "Agences de voyage",
-    subtitle: "Conseillez mieux, fidélisez plus",
-    desc: "Offrez à vos clients une recommandation précise sur le meilleur moment pour acheter leur billet. Intégrez l'analyse de prix dans votre tunnel de vente et fidélisez vos voyageurs et devenez l'agence qui sait QUAND acheter, pas seulement où.",
-    bullets: [
-      "Outil intégrable en 2 minutes et personnalisé aux couleurs de votre marque",
-      "Rapport d'analyse PDF à partager",
-      "Support dédié & onboarding inclus",
-      "+ 1% de commission sur chaque réservation via votre lien unique",
-    ],
-    price: "149€",
-    period: "/mois",
-    cta: "Demander une démo",
-    link: "/tarifs",
+    title: "Je ne sais jamais si le prix va monter ou descendre",
+    response:
+      "FlySmart vous donne une recommandation claire: acheter maintenant ou attendre, avec une fenêtre de timing lisible.",
   },
   {
-    icon: "🏭",
-    title: "Comités d'entreprise",
-    subtitle: "Optimisez vos voyages collectifs",
-    desc: "Achetez les billets au bon moment pour tous vos séminaires, team buildings et voyages d'affaires. Économisez jusqu'à 40%, sans changer vos habitudes. Économisez des milliers d'euros sur vos sorties annuelles.",
-    bullets: [
-      "Outil intégrable en 2 minutes et personnalisé aux couleurs de votre marque",
-      "Analyse multi-destinations simultanée",
-      "Rapports d'économies générés automatiquement",
-      "Facturation entreprise & devis sur-mesure",
-      "Support dédié & onboarding inclus",
-      "+ 1% de commission sur chaque réservation via votre lien"
+    title: "Le temps que le budget soit valide, le prix a deja change",
+    response:
+      "FlySmart affiche une deadline d'action et vous aide à décider avant que la fenêtre idéale se referme.",
+  },
+  {
+    title: "Je ne suis pas specialiste du voyage, je fais au mieux",
+    response:
+      "FlySmart traduit les données prix en décisions simples, pour éviter de vous tromper même sans expertise voyage.",
+  },
+];
+
+const LANDING_PRICING = [
+  {
+    name: "Starter",
+    price: "99€",
+    period: "/mois",
+    subtitle:
+      "Pour les équipes qui organisent des déplacements ponctuels (jusqu'à environ 10 recherches ou réservations par mois)",
+    features: [
+      "Recommandation d'achat en temps reel",
+      "Alertes prix par email",
+      "Historique des économies estimées réalisées",
     ],
+    cta: "Choisir Starter",
+    highlight: false,
+  },
+  {
+    name: "Pro",
     price: "199€",
     period: "/mois",
-    cta: "Fonctions avancées",
-    link: "/tarifs",
+    subtitle:
+      "Pour les entreprises avec des déplacements récurrents (séminaires, tournées commerciales, salons)",
+    features: [
+      "Tout Starter",
+      "Partage de recommandation pour validation manager",
+      "Multi-utilisateurs",
+      "Support prioritaire",
+    ],
+    cta: "Choisir Pro",
+    highlight: true,
   },
   {
-    icon: "✈️",
-    title: "Blogueurs & Influenceurs",
-    subtitle: "Monétisez votre audience",
-    desc: "Donnez à votre audience des recommandations basées sur de vraies données de prix. Renforcez votre crédibilité et monétisez chaque conseil voyage.",
-    bullets: [
-      "Outil intégrable en 2 lignes de code dans votre blog ou newsletter",
-      "Dashboard d'analytiques et suivi en temps réel",
-      "+ 1% de commission sur chaque réservation via votre lien unique",
-    ],
-    price: "49€",
-    period: "/mois",
-    cta: "Rejoindre gratuitement",
-    link: "/tarifs",
+    name: "Enterprise",
+    price: "Sur devis",
+    period: "",
+    subtitle: "Pour les volumes importants et organisations multi-sites",
+    features: ["Contact commercial dedie"],
+    cta: "Parler à l'équipe",
+    highlight: false,
   },
 ];
 
@@ -74,20 +81,20 @@ const STEPS = [
   {
     n: "01",
     icon: "🔧",
-    title: "Intégrez votre script pro",
-    desc: "Intégrez notre widget en 5 minutes sur votre site. 2 lignes de HTML, aucune dépendance JavaScript.",
+    title: "Connectez votre recherche de vols",
+    desc: "Lancez une analyse en quelques clics sur vos trajets pros et obtenez une recommandation de timing exploitable tout de suite.",
   },
   {
     n: "02",
     icon: "⚡",
-    title: "Activez votre compte en 5 secondes",
-    desc: "Créez votre compte partenaire, obtenez votre clé API et configurez vos préférences en quelques clics.",
+    title: "Partagez la recommandation pour validation",
+    desc: "Envoyez en un clic le conseil FlySmart à votre manager avec une date limite claire avant variation probable du prix.",
   },
   {
     n: "03",
     icon: "💰",
-    title: "Vos clients analysent, vous gagnez",
-    desc: "Ils identifient le bon moment pour acheter. Vous êtes référent de confiance, vous touchez des commissions.",
+    title: "Achetez au bon moment sans stress",
+    desc: "Votre équipe réserve avec plus de certitude et suit les économies estimées sur un historique centralisé.",
   },
 ];
 
@@ -99,54 +106,54 @@ const STATS = [
 ];
 
 const TESTIMONIAL_STATS = [
-  { value: "150+", label: "partenaires actifs" },
+  { value: "95%", label: "des PME sans TMC" },
   { value: "4.8/5", label: "note moyenne" },
-  { value: "-38%", label: "économies moyennes" },
+  { value: "-38%", label: "économies estimées" },
 ];
 
 const TESTIMONIALS = [
   {
-    name: "Sarah K.",
-    role: "Blogueuse voyage — PartirMalin.fr",
+    name: "Claire M.",
+    role: "Office manager - PME industrielle",
     avatar: "SK",
-    text: "FlySmart a transformé ma façon de conseiller mes lecteurs. Le widget s'intègre en 5 minutes et mes commissions ont augmenté de 40% en 2 mois.",
+    text: "On a déjà vu un billet prendre 300EUR en deux jours. Depuis qu'on a l'alerte timing, on réserve avec beaucoup moins de stress.",
     stars: 5,
   },
   {
-    name: "Thomas R.",
-    role: "Responsable CE — Groupe Michelin",
+    name: "Nicolas T.",
+    role: "Coordinateur logistique - PME commerciale",
     avatar: "TR",
-    text: "On économise en moyenne 280€ par billet sur nos voyages de groupe. Sur 50 billets par an, ça fait une sacrée différence.",
+    text: "Le vrai gain, c'est la certitude. J'envoie la recommandation au manager, il valide vite et on évite les hausses de dernière minute.",
     stars: 5,
   },
   {
-    name: "Léa D.",
-    role: "Fondatrice — VoyageExpert Agence",
+    name: "Sophie R.",
+    role: "Assistante de direction - PME multisites",
     avatar: "LD",
-    text: "L'API est propre, bien documentée et le support répond en moins d'une heure. Exactement ce dont une agence a besoin.",
+    text: "Je ne suis pas experte voyage. FlySmart me dit simplement quand acheter, et l'historique des économies estimées rassure la direction.",
     stars: 5,
   },
 ];
 
 const FAQ = [
   {
-    q: "Comment FlySmart prédit-il les prix ?",
+    q: "Comment FlySmart predit-il les prix ?",
     a: "Notre modèle analyse les courbes empiriques de prix sur 12 semaines avant le départ, combinées aux données Amadeus en temps réel quand disponibles. Nous identifions la fenêtre où les prix sont historiquement les plus bas.",
   },
   {
     q: "Mon widget fonctionnera-t-il sur WordPress ?",
-    a: "Oui. Le widget est un Web Component en vanilla JavaScript sans dépendances. Il fonctionne sur n'importe quel site : WordPress, Webflow, Wix, Squarespace, ou HTML pur.",
+    a: "Oui. Le widget est un Web Component en JavaScript sans dépendances. Il fonctionne sur WordPress, Webflow, Wix, Squarespace ou HTML pur.",
   },
   {
-    q: "Comment sont calculées les commissions d'affiliation ?",
-    a: "1% du prix du billet est reversé pour chaque achat effectué via votre widget. Les commissions sont calculées automatiquement et versées mensuellement sur votre compte.",
+    q: "Comment FlySmart calcule les économies affichées ?",
+    a: "Nous comparons le prix recommandé par FlySmart avec le prix constaté à la date où vous étiez sur le point d'acheter. Ce montant reste un indicateur d'aide au pilotage.",
   },
   {
     q: "Puis-je tester avant de m'abonner ?",
-    a: "Oui ! La clé démo vous donne 10 requêtes gratuites par jour. Vous pouvez aussi analyser des vols directement sur notre page /analyse sans inscription.",
+    a: "Oui. Vous pouvez analyser des vols directement sur notre page /analyse puis demander une démo guidée sur vos derniers déplacements.",
   },
   {
-    q: "Quelle est la précision des recommandations ?",
+    q: "Quelle est la precision des recommandations ?",
     a: "Notre fenêtre optimale est confirmée dans 85% des cas analysés, sur la base de 3 ans d'observations réelles sur plus de 200 routes.",
   },
 ];
@@ -334,7 +341,7 @@ export default function LandingClient() {
       <Header />
 
       {demoToast ? (
-        <div className="fixed right-4 top-4 z-[120] w-[calc(100%-2rem)] max-w-sm">
+        <div className="fixed right-4 top-4 z-120 w-[calc(100%-2rem)] max-w-sm">
           <div
             role={demoToast.type === "error" ? "alert" : "status"}
             className="rounded-2xl border px-4 py-3 shadow-2xl backdrop-blur"
@@ -383,7 +390,7 @@ export default function LandingClient() {
                   className="w-1.5 h-1.5 rounded-full animate-pulse"
                   style={{ background: "var(--amber)" }}
                 ></span>
-                Pour les professionnels du voyage — Agences · CE · Créateurs
+                Pour les coordinateurs de déplacements pro en PME
               </span>
             </div>
             <h1
@@ -393,21 +400,16 @@ export default function LandingClient() {
                 fontFamily: "var(--font-display)",
               }}
             >
-              Vos clients achètent leurs billets{" "}
-              <span style={{ color: "var(--amber)" }}>au bon moment,</span> pas
-              au mauvais prix
+              Sachez enfin si c&apos;est le bon moment d&apos;acheter,
+              <span style={{ color: "var(--amber)" }}> sans être expert du voyage</span>
             </h1>
             <p
               className="fade-up delay-200 text-xl max-w-2xl mx-auto mb-12"
               style={{ color: "var(--steel-light)", lineHeight: "1.7" }}
             >
-              Agences, comités d'entreprise et influenceurs — offrez l'analyse
-              de prix FlySmart à vos clients. Ils économisent, vous faites la
-              différence. <br />
-              <span style={{ color: "var(--amber)" }}>
-                Jusqu'à 40% d'économies
-              </span>{" "}
-              sans effort de votre part.
+              Comme 95% des PME, vous gérez vos voyages sans agence dédiée.
+              FlySmart vous dit quand acheter pour limiter l&apos;incertitude et
+              agir avant que le prix ne bouge.
             </p>
 
             <div className="fade-up delay-300 flex flex-col sm:flex-row gap-4 justify-center mb-12">
@@ -427,7 +429,7 @@ export default function LandingClient() {
                   border: "1px solid rgba(186,199,226,0.25)",
                 }}
               >
-                Analyser un vol maintenant ↗
+                Auditer mon dernier déplacement ↗
               </Link>
             </div>
 
@@ -444,32 +446,32 @@ export default function LandingClient() {
                 style={{ background: "rgba(107, 127, 168, 0.2)" }}
               ></span>
               <span className="flex items-center gap-2 text-sm">
-                <span style={{ color: "var(--amber)" }}>✓</span> Essai gratuit,
-                sans engagement
+                <span style={{ color: "var(--amber)" }}>✓</span> Recommandation
+                claire: acheter ou attendre
               </span>
               <span
                 className="w-px h-4 hidden sm:block"
                 style={{ background: "rgba(107, 127, 168, 0.2)" }}
               ></span>
               <span className="flex items-center gap-2 text-sm">
-                <span style={{ color: "var(--amber)" }}>✓</span> + 1% de
-                commission sur chaque réservation
+                <span style={{ color: "var(--amber)" }}>✓</span> Partage en un
+                clic pour validation manager
               </span>
             </div>
           </div>
         </section>
 
         {/* ══════════════════════════════════════════
-            SEGMENTS
+            ICP + PROBLEMES + PRICING
         ══════════════════════════════════════════ */}
-        <section className="py-24 px-6" id="segments">
+        <section className="py-24 px-6" id="problemes">
           <div className="mx-auto max-w-5xl">
             <Reveal>
               <p
                 className="text-xs font-medium tracking-widest uppercase text-center mb-3"
                 style={{ color: "var(--amber)" }}
               >
-                Pour qui · Adaptez · Personnalisez
+                Persona cible unique
               </p>
               <h2
                 className="text-3xl md:text-4xl font-semibold text-center mb-16"
@@ -478,184 +480,136 @@ export default function LandingClient() {
                   fontFamily: "var(--font-display)",
                 }}
               >
-                FlySmart est fait{" "}
-                <span style={{ color: "var(--amber)" }}>pour vous</span>
+                Conçu pour le coordinateur de déplacements pro
+                <span style={{ color: "var(--amber)" }}> en PME</span>
               </h2>
             </Reveal>
 
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-10">
+              <Reveal delay={80}>
+                <div
+                  className="rounded-2xl p-7"
+                  style={{ background: "var(--navy-mid)", border: "1px solid rgba(232, 163, 48, 0.2)" }}
+                >
+                  <p className="text-xs font-medium tracking-widest uppercase mb-3" style={{ color: "var(--amber)" }}>
+                    Qui vous êtes
+                  </p>
+                  <h3 className="text-xl font-semibold mb-3" style={{ color: "var(--cream)", fontFamily: "var(--font-display)" }}>
+                    Office manager ou coordinateur logistique dans une PME de 50 à 400 salariés
+                  </h3>
+                  <p className="text-sm leading-relaxed" style={{ color: "var(--steel-light)" }}>
+                    Vous gérez les déplacements à la main entre comparateurs et sites compagnies. FlySmart vous aide à décider rapidement sans expertise technique.
+                  </p>
+                </div>
+              </Reveal>
+
+              <Reveal delay={160}>
+                <div
+                  className="rounded-2xl p-7"
+                  style={{ background: "rgba(17, 27, 53, 0.7)", border: "1px solid rgba(107, 127, 168, 0.2)" }}
+                >
+                  <p className="text-xs font-medium tracking-widest uppercase mb-3" style={{ color: "var(--steel)" }}>
+                    Preuve terrain
+                  </p>
+                  <p className="text-2xl md:text-3xl font-bold" style={{ color: "var(--amber)", fontFamily: "var(--font-display)" }}>
+                    95% des PME n&apos;ont pas de TMC
+                  </p>
+                  <p className="text-sm mt-3" style={{ color: "var(--steel-light)" }}>
+                    FlySmart est pensé pour ces équipes qui doivent réserver efficacement, avec validation interne et contraintes budgétaires.
+                  </p>
+                </div>
+              </Reveal>
+            </div>
+
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {SEGMENTS.map((s, i) => (
-                <Reveal key={s.title} delay={i * 120}>
-                  <div
-                    className="relative rounded-2xl p-7 flex flex-col h-full"
-                    style={i === 1
-                      ? {background: "rgba(26, 40, 71, 0.85)", border: "1px solid rgba(232, 163, 48, 0.35)", boxShadow: "rgba(232, 163, 48, 0.08) 0px 0px 60px", transform: "translateY(0px)"}
-                      : {background: "var(--navy-mid)", border: "1px solid rgba(186,199,226,0.1)"}}
-                  >
-                    {i === 1 && (
-                      <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
-                        <span className="px-4 py-1 rounded-full text-xs font-semibold whitespace-nowrap" style={{background: "var(--amber)", color: "rgb(8, 12, 24)"}}>⭐ Le plus populaire</span>
-                      </div>
-                    )}
-                    <div className="text-4xl mb-4">{s.icon}</div>
-                    <h3
-                      className="text-xl font-semibold mb-3"
-                      style={{
-                        color: "var(--cream)",
-                        fontFamily: "var(--font-display)",
-                      }}
-                    >
-                      {s.title}
-                    </h3>
-                    <p
-                      className="text-sm font-medium mb-2"
-                      style={{ color: "var(--amber)" }}
-                    >
-                      {s.subtitle}
+              {ICP_PROBLEMS.map((item, i) => (
+                <Reveal key={item.title} delay={i * 100}>
+                  <div className="rounded-2xl p-6 h-full" style={{ background: "var(--navy-mid)", border: "1px solid rgba(186,199,226,0.12)" }}>
+                    <p className="text-sm font-semibold mb-3" style={{ color: "var(--cream)" }}>
+                      {item.title}
                     </p>
-                    <p
-                      className="text-sm mb-4 leading-relaxed"
-                      style={{ color: "var(--steel-light)" }}
-                    >
-                      {s.desc}
+                    <p className="text-sm leading-relaxed" style={{ color: "var(--steel-light)" }}>
+                      {item.response}
                     </p>
-                    <ul className="space-y-2 mb-6 flex-1">
-                      {s.bullets.map((b: string) => (
-                        <li
-                          key={b}
-                          className="flex items-start gap-2 text-sm"
-                          style={{ color: "var(--steel-light)" }}
-                        >
-                          <span
-                            style={{ color: "var(--green-ok)", flexShrink: 0 }}
-                          >
-                            ✓
-                          </span>{" "}
-                          {b}
-                        </li>
-                      ))}
-                    </ul>
-                    <div
-                      className="flex items-end justify-between mt-auto pt-4"
-                      style={{ borderTop: "1px solid rgba(186,199,226,0.08)" }}
-                    >
-                      <div>
-                        <span
-                          className="text-2xl font-bold"
-                          style={{ color: "var(--amber)" }}
-                        >
-                          {s.price}
-                        </span>
-                        <span
-                          className="text-sm ml-1"
-                          style={{ color: "var(--steel)" }}
-                        >
-                          {s.period}
-                        </span>
-                      </div>
-                      <Link
-                        href={s.link}
-                        className="text-sm font-medium"
-                        style={{ color: "var(--amber)" }}
-                      >
-                        {s.cta} →
-                      </Link>
-                    </div>
-                    <div className="mt-4">
-                      {i === 0 && (
-                        <a
-                          href="#contact-demo"
-                          className="w-full py-3 rounded-xl text-sm font-semibold text-center block transition-all duration-200"
-                          style={{
-                            border: "1px solid rgba(37, 99, 235, 0.25)",
-                            color: "var(--cream)",
-                            background: "rgba(37, 99, 235, 0.08)",
-                          }}
-                        >
-                          Voir ma démo gratuite →
-                        </a>
-                      )}
-                      {i === 1 && (
-                        <a
-                          href="#contact-demo"
-                          className="w-full py-3 rounded-xl text-sm font-semibold text-center block transition-all duration-200"
-                          style={{
-                            background:
-                              "linear-gradient(135deg, rgb(232, 163, 48) 0%, rgb(196, 132, 42) 100%)",
-                            color: "rgb(8, 12, 24)",
-                          }}
-                        >
-                          Commencer l'essai gratuit →
-                        </a>
-                      )}
-                      {i === 2 && (
-                        <a
-                          href="#contact-demo"
-                          className="w-full py-3 rounded-xl text-sm font-semibold text-center block transition-all duration-200"
-                          style={{
-                            border: "1px solid rgba(124, 58, 237, 0.25)",
-                            color: "var(--cream)",
-                            background: "rgba(124, 58, 237, 0.08)",
-                            opacity: 1,
-                          }}
-                        >
-                          Rejoindre gratuitement →
-                        </a>
-                      )}
-                    </div>
                   </div>
                 </Reveal>
               ))}
             </div>
-                    <div
-          className="mt-8"
-          style={{
-            opacity: 1,
-            transform: "translateY(0px)",
-            transition:
-              "opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1) 300ms, transform 0.7s cubic-bezier(0.4, 0, 0.2, 1) 300ms",
-          }}
-        >
-          <div
-            className="rounded-2xl px-8 py-5 flex flex-col sm:flex-row items-center justify-between gap-4"
-            style={{
-              background: "rgba(232, 163, 48, 0.07)",
-              border: "1px solid rgba(232, 163, 48, 0.2)",
-            }}
-          >
-            <div className="flex items-center gap-3">
-              <span className="text-2xl">💰</span>
-              <div>
-                <p
-                  className="font-semibold text-sm"
-                  style={{ color: "var(--cream)" }}
-                >
-                  + 1% de commission sur chaque billet
+
+            <Reveal delay={260}>
+              <div className="mt-10 rounded-2xl p-7" style={{ background: "rgba(232, 163, 48, 0.08)", border: "1px solid rgba(232, 163, 48, 0.28)" }}>
+                <p className="text-xs font-medium tracking-widest uppercase mb-3" style={{ color: "var(--amber)" }}>
+                  Fonctionnalité clé
                 </p>
-                <p className="text-xs" style={{ color: "var(--steel-light)" }}>
-                  Valable pour tous les plans — trackée automatiquement via
-                  votre lien unique FlySmart
+                <h3 className="text-xl font-semibold mb-2" style={{ color: "var(--cream)", fontFamily: "var(--font-display)" }}>
+                  Partage pour validation manager en un clic
+                </h3>
+                <p className="text-sm" style={{ color: "var(--steel-light)", lineHeight: "1.7" }}>
+                  Partagez la recommandation d&apos;achat avec votre manager, accompagnée d&apos;une deadline claire avant variation probable du prix.
                 </p>
               </div>
-            </div>
-            <a
-              href="#contact-demo"
-              className="text-sm font-medium shrink-0"
-              style={{ color: "var(--amber)" }}
-            >
-              En savoir plus →
-            </a>
-          </div>
-        </div>
-        <Link
-          href="/tarifs"
-          style={{ textDecoration: "underline", color: "var(--amber)" }}
-        ></Link>
+            </Reveal>
+
+            <Reveal delay={320}>
+              <div className="mt-16" id="pricing">
+                <p className="text-xs font-medium tracking-widest uppercase text-center mb-3" style={{ color: "var(--amber)" }}>
+                  Tarifs
+                </p>
+                <h3 className="text-3xl md:text-4xl font-semibold text-center mb-10" style={{ color: "var(--cream)", fontFamily: "var(--font-display)" }}>
+                  Une grille simple pour les déplacements pro en PME
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  {LANDING_PRICING.map((plan, i) => (
+                    <div
+                      key={plan.name}
+                      className="rounded-2xl p-7 flex flex-col"
+                      style={plan.highlight
+                        ? { background: "rgba(26, 40, 71, 0.88)", border: "1px solid rgba(232, 163, 48, 0.35)", boxShadow: "rgba(232, 163, 48, 0.08) 0px 0px 60px" }
+                        : { background: "var(--navy-mid)", border: "1px solid rgba(186,199,226,0.12)" }}
+                    >
+                      {plan.highlight ? (
+                        <span className="mb-4 inline-flex w-fit px-3 py-1 rounded-full text-xs font-semibold" style={{ background: "rgba(232, 163, 48, 0.2)", color: "var(--amber)" }}>
+                          Le plus choisi
+                        </span>
+                      ) : null}
+                      <h4 className="text-xl font-semibold" style={{ color: "var(--cream)", fontFamily: "var(--font-display)" }}>
+                        {plan.name}
+                      </h4>
+                      <p className="mt-3 text-3xl font-bold" style={{ color: "var(--amber)" }}>
+                        {plan.price}
+                        <span className="text-sm font-medium ml-1" style={{ color: "var(--steel)" }}>{plan.period}</span>
+                      </p>
+                      <p className="text-sm mt-4 mb-6" style={{ color: "var(--steel-light)" }}>{plan.subtitle}</p>
+                      <ul className="space-y-2 mb-6 flex-1">
+                        {plan.features.map((feature) => (
+                          <li key={feature} className="flex items-start gap-2 text-sm" style={{ color: "var(--steel-light)" }}>
+                            <span style={{ color: "var(--green-ok)", flexShrink: 0 }}>✓</span>
+                            {feature}
+                          </li>
+                        ))}
+                      </ul>
+                      <a
+                        href="#contact-demo"
+                        className="w-full py-3 rounded-xl text-sm font-semibold text-center block"
+                        style={i === 1
+                          ? { background: "linear-gradient(135deg, rgb(232, 163, 48) 0%, rgb(196, 132, 42) 100%)", color: "rgb(8, 12, 24)" }
+                          : { border: "1px solid rgba(232, 163, 48, 0.35)", color: "var(--amber)", background: "rgba(232, 163, 48, 0.08)" }}
+                      >
+                        {plan.cta} →
+                      </a>
+                    </div>
+                  ))}
+                </div>
+                <p className="text-xs text-center mt-6" style={{ color: "var(--steel)" }}>
+                  Les économies affichées dans le dashboard sont des estimations indicatives et ne constituent pas une base de facturation.
+                </p>
+              </div>
+            </Reveal>
           </div>
         </section>
 
         {/* ══════════════════════════════════════════
-            BANNIÈRE COMMISSION
+            SECTION TRANSITION
         ══════════════════════════════════════════ */}
 
         {/* ══════════════════════════════════════════
@@ -680,8 +634,8 @@ export default function LandingClient() {
                   fontFamily: "var(--font-display)",
                 }}
               >
-                En 3 étapes, vos clients{" "}
-                <span style={{ color: "var(--amber)" }}>économisent</span>
+                En 3 etapes, votre équipe{" "}
+                <span style={{ color: "var(--amber)" }}>décide mieux</span>
               </h2>
             </Reveal>
 
@@ -765,7 +719,7 @@ export default function LandingClient() {
         </section>
 
         {/* ══════════════════════════════════════════
-            WIDGET PREVIEW — Ce que voient vos clients
+            WIDGET PREVIEW — Ce que voit votre equipe
         ══════════════════════════════════════════ */}
         <section className="py-24 px-6">
           <div className="mx-auto max-w-5xl">
@@ -783,8 +737,8 @@ export default function LandingClient() {
                   fontFamily: "var(--font-display)",
                 }}
               >
-                Ce que voient{" "}
-                <span style={{ color: "var(--amber)" }}>vos clients</span>
+                Ce que voit{" "}
+                <span style={{ color: "var(--amber)" }}>votre equipe</span>
               </h2>
               <p className="text-sm text-center mt-4 mb-16" style={{ color: "var(--steel-light)" }}>Cet outil s'intègre sur votre site en moins de 2 minutes</p>
             </Reveal>
@@ -811,7 +765,7 @@ export default function LandingClient() {
                     className="flex-1 mx-4 px-3 py-1 rounded text-xs text-center"
                     style={{ background: "rgba(17, 27, 53, 0.8)", color: "var(--steel)", border: "1px solid rgba(107, 127, 168, 0.1)" }}
                   >
-                    www.votre-agence.fr/destination
+                    intranet.votre-pme.fr/deplacements
                   </div>
                 </div>
 
@@ -1050,7 +1004,7 @@ export default function LandingClient() {
                     <input
                       required
                       type="text"
-                      placeholder="Agence de voyages, CE, media..."
+                      placeholder="Nom de votre PME"
                       value={demoForm.entreprise}
                       onChange={(e) => updateDemoForm("entreprise", e.target.value)}
                       className="w-full rounded-xl px-4 py-3.5 text-sm"
@@ -1067,9 +1021,9 @@ export default function LandingClient() {
                       style={{ background: "rgba(8, 12, 24, 0.6)", border: "1px solid rgba(107, 127, 168, 0.15)", color: demoForm.structureType ? "var(--cream)" : "var(--steel)", outline: "none", transition: "border-color 0.2s, box-shadow 0.2s" }}
                     >
                       <option value="" style={{ background: "rgb(13, 20, 38)" }}>Choisir...</option>
-                      <option value="agence" style={{ background: "rgb(13, 20, 38)" }}>Agence de voyage</option>
-                      <option value="ce" style={{ background: "rgb(13, 20, 38)" }}>Comite d'entreprise</option>
-                      <option value="influenceur" style={{ background: "rgb(13, 20, 38)" }}>Blogueur / Influenceur voyage</option>
+                      <option value="office-manager" style={{ background: "rgb(13, 20, 38)" }}>Office manager</option>
+                      <option value="coord-logistique" style={{ background: "rgb(13, 20, 38)" }}>Coordinateur logistique</option>
+                      <option value="assistante-direction" style={{ background: "rgb(13, 20, 38)" }}>Assistante de direction</option>
                       <option value="autre" style={{ background: "rgb(13, 20, 38)" }}>Autre</option>
                     </select>
                   </div>
@@ -1089,7 +1043,7 @@ export default function LandingClient() {
                   <label className="text-xs font-medium uppercase tracking-widest" style={{ color: "var(--steel)" }}>Message</label>
                   <textarea
                     rows={4}
-                    placeholder="Décrivez votre projet, votre audience, vos besoins..."
+                    placeholder="Exemple: nous avons 6 a 12 deplacements pro par mois et un delai de validation manager de 24 a 48h."
                     value={demoForm.message}
                     onChange={(e) => updateDemoForm("message", e.target.value)}
                     className="rounded-xl px-4 py-3 text-sm resize-none"
@@ -1120,13 +1074,13 @@ export default function LandingClient() {
                 className="text-xs font-medium tracking-widest uppercase text-center mb-3"
                 style={{ color: "var(--steel)" }}
               >
-                Ce que disent nos partenaires
+                Ce que disent les equipes terrain
               </p>
               <h2
                 className="text-3xl md:text-4xl font-semibold text-center mb-12"
                 style={{ color: "var(--cream)", fontFamily: "var(--font-display)" }}
               >
-                Ils font <span style={{ color: "var(--amber)" }}>confiance</span> à FlySmart
+                Moins de stress, <span style={{ color: "var(--amber)" }}>plus de certitude</span>
               </h2>
             </Reveal>
 
@@ -1180,7 +1134,7 @@ export default function LandingClient() {
         {/* ══════════════════════════════════════════
             FAQ
         ══════════════════════════════════════════ */}
-        <section className="py-24 px-6" style={{ background: "var(--navy-deep)" }}>
+        <section className="py-24 px-6" style={{ background: "var(--navy-deep)" }} id="faq">
           <div className="mx-auto max-w-3xl">
             <Reveal>
               <p className="text-xs text-center font-medium uppercase tracking-widest mb-4" style={{ color: "var(--amber)" }}>Vous avez des questions ?</p>
@@ -1531,10 +1485,10 @@ export default function LandingClient() {
           <div className="max-w-5xl mx-auto">
             <div className="flex flex-col md:flex-row items-center md:items-start justify-between gap-8 mb-8">
                 <div>
-                  <span className="font-display text-2xl font-semibold" style={{ color: "var(--amber)" }}>Fly<span style={{ color: "var(--cream)" }}>Smart</span></span><p className="text-xs mt-2 max-w-xs" style={{ color: "var(--steel)" }}>La solution pour agences de voyage, comités d'entreprise et créateurs de contenu voyage.</p></div>
-                  <div className="flex flex-wrap gap-x-8 gap-y-2 text-sm" style={{ color: "var(--steel)" }}><a href="#segments" className="hover:opacity-80 transition-opacity">Solutions</a><a href="#widget-demo" className="hover:opacity-80 transition-opacity">Démo widget</a><a className="hover:opacity-80 transition-opacity" href="/tarifs">Tarifs</a><a href="#faq" className="hover:opacity-80 transition-opacity">FAQ</a><a href="#contact-demo" className="hover:opacity-80 transition-opacity">Demander une démo</a><a className="hover:opacity-80 transition-opacity" href="/analyse">Analyser un vol</a></div>
+                  <span className="font-display text-2xl font-semibold" style={{ color: "var(--amber)" }}>Fly<span style={{ color: "var(--cream)" }}>Smart</span></span><p className="text-xs mt-2 max-w-xs" style={{ color: "var(--steel)" }}>La solution pour les coordinateurs de deplacements professionnels en PME.</p></div>
+                  <div className="flex flex-wrap gap-x-8 gap-y-2 text-sm" style={{ color: "var(--steel)" }}><a href="#problemes" className="hover:opacity-80 transition-opacity">Problemes</a><a href="#pricing" className="hover:opacity-80 transition-opacity">Tarifs</a><a className="hover:opacity-80 transition-opacity" href="/tarifs">Page tarifs</a><a href="#faq" className="hover:opacity-80 transition-opacity">FAQ</a><a href="#contact-demo" className="hover:opacity-80 transition-opacity">Demander une démo</a><a className="hover:opacity-80 transition-opacity" href="/analyse">Auditer un deplacement</a></div>
             </div>
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-6 text-xs" style={{ borderTop: "1px solid rgba(107, 127, 168, 0.08)", color: "var(--steel)" }}><span>© 2026 FlySmart — La solution pour les professionnels du voyage</span><span>Les prix sont indicatifs. Précision algorithmique ~78%.</span></div>
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-6 text-xs" style={{ borderTop: "1px solid rgba(107, 127, 168, 0.08)", color: "var(--steel)" }}><span>© 2026 FlySmart — La solution pour les deplacements pro en PME</span><span>Les economies affichees sont indicatives.</span></div>
           </div>
         </footer>
       </main>

@@ -10,13 +10,6 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'Plan inconnu' }, { status: 400 })
   }
 
-  if (!process.env.STRIPE_SECRET_KEY) {
-    return NextResponse.json(
-      { error: 'Stripe non configuré', message: 'Définissez STRIPE_SECRET_KEY' },
-      { status: 503 }
-    )
-  }
-
   try {
     const origin = req.nextUrl.origin
     const url    = await createCheckoutSession(plan, origin)
