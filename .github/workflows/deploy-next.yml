@@ -37,4 +37,15 @@ jobs:
           else
             pm2 start npm --name flysmart -- start
           fi
+
+          # Worker BullMQ : execute la collecte quotidienne de prix.
+          # Process distinct de l app web, sinon un reload du site
+          # interromprait une collecte en cours.
+          if pm2 describe flysmart-worker > /dev/null 2>&1; then
+            pm2 reload flysmart-worker --update-env
+          else
+            pm2 start npm --name flysmart-worker -- run worker
+          fi
+
+          pm2 save
           EOF

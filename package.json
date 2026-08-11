@@ -8,11 +8,11 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "validate-delta": "node --experimental-strip-types --env-file=.env.local scripts/validate-price-delta.ts",
-    "collect-prices": "node --experimental-strip-types --env-file=.env.local scripts/collect-prices.ts",
-    "export-snapshots": "node --experimental-strip-types --env-file=.env.local scripts/export-snapshots.ts",
-    "worker": "node --experimental-strip-types --env-file=.env.local scripts/worker.ts",
-    "schedule": "node --experimental-strip-types --env-file=.env.local scripts/schedule-collect.ts",
+    "validate-delta": "node --experimental-strip-types --env-file-if-exists=.env --env-file-if-exists=.env.local scripts/validate-price-delta.ts",
+    "collect-prices": "node --experimental-strip-types --env-file-if-exists=.env --env-file-if-exists=.env.local scripts/collect-prices.ts",
+    "export-snapshots": "node --experimental-strip-types --env-file-if-exists=.env --env-file-if-exists=.env.local scripts/export-snapshots.ts",
+    "worker": "node --experimental-strip-types --env-file-if-exists=.env --env-file-if-exists=.env.local scripts/worker.ts",
+    "schedule": "node --experimental-strip-types --env-file-if-exists=.env --env-file-if-exists=.env.local scripts/schedule-collect.ts",
     "postinstall": "prisma generate"
   },
   "dependencies": {
