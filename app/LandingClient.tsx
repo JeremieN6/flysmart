@@ -7,6 +7,7 @@ import LandingProblems from "@/app/components/landing/LandingProblems";
 import LandingWidgetPreview from "@/app/components/landing/LandingWidgetPreview";
 import LandingPriceFinder from "@/app/components/landing/LandingPriceFinder";
 import LandingDemoForm from "@/app/components/landing/LandingDemoForm";
+import LandingValidationDemo from "@/app/components/landing/LandingValidationDemo";
 import LandingTestimonials from "@/app/components/landing/LandingTestimonials";
 import LandingFaq from "@/app/components/landing/LandingFaq";
 import LandingStatsBar from "@/app/components/landing/LandingStatsBar";
@@ -24,6 +25,7 @@ export default function LandingClient() {
         {/* <LandingStepper /> */}
         <LandingWidgetPreview />
         <LandingPriceFinder />
+        <LandingValidationDemo />
         <LandingDemoForm />
         <LandingTestimonials />
         <LandingFaq />

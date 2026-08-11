@@ -24,6 +24,14 @@ const FAQ = [
     q: "Puis-je tester FlySmart avant abonnement ?",
     a: "Oui. Vous pouvez lancer une première analyse sur la page d'analyse, puis demander une démo guidée sur vos trajets récents pour valider l'usage avec votre équipe.",
   },
+  {
+    q: "Sur quelles données reposent vos recommandations ?",
+    a: "Sur les historiques de prix de la route et de la période concernées, avec le nombre de tarifs réellement observés affiché à côté de chaque recommandation. Quand le volume est trop faible pour conclure, FlySmart le dit explicitement plutôt que de trancher.",
+  },
+  {
+    q: "Que se passe-t-il si la recommandation se trompe ?",
+    a: "FlySmart donne une probabilité, pas une certitude : chaque recommandation affiche son niveau de confiance et la fourchette de prix qui l'entoure. Vous gardez la décision — et l'historique garde la trace de ce qui était connu au moment où vous l'avez prise.",
+  },
 ];
 
 export default function LandingFaq() {

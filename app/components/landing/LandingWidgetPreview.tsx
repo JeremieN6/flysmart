@@ -295,20 +295,7 @@ export default function LandingWidgetPreview() {
             </div>
           </div>
         </Reveal>
-        <Reveal delay={200}>
-          <div className="text-center mt-8">
-            <p className="text-sm mb-4" style={{ color: "var(--steel-light)" }}>
-              Cet outil est entièrement personnalisable à vos couleurs et logo
-            </p>
-            <a
-              href="#contact-demo"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm"
-              style={{ background: "linear-gradient(135deg, rgb(232, 163, 48) 0%, rgb(196, 132, 42) 100%)", color: "rgb(8, 12, 24)" }}
-            >
-              Ajouter cet outil à mon site →
-            </a>
-          </div>
-        </Reveal>
+
       </div>
     </section>
   );
