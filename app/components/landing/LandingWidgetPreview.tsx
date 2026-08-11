@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Reveal from "@/app/components/Reveal";
+import IllustrationNote from "@/app/components/landing/IllustrationNote";
 
 const W_LABELS = ["S-12","S-11","S-10","S-9","S-8","S-7","S-6","S-5","S-4","S-3","S-2","S-1"];
 
@@ -98,7 +99,7 @@ export default function LandingWidgetPreview() {
   const wFill = wStroke + ` L ${wr.points[wr.points.length - 1][0]} 226 L ${wr.points[0][0]} 226 Z`;
 
   return (
-    <section className="py-24 px-6">
+    <section className="py-24 px-6" id="apercu">
       <div className="mx-auto max-w-5xl">
         <Reveal>
           <p
@@ -117,7 +118,13 @@ export default function LandingWidgetPreview() {
             Ce que voit{" "}
             <span style={{ color: "var(--amber)" }}>votre equipe</span>
           </h2>
-          <p className="text-sm text-center mt-4 mb-16" style={{ color: "var(--steel-light)" }}>Cet outil s'intègre sur votre site en moins de 2 minutes</p>
+          <p
+            className="text-sm text-center mt-4 mb-14 max-w-2xl mx-auto"
+            style={{ color: "var(--steel-light)" }}
+          >
+            Une courbe de prix sur douze semaines, la fenêtre d&apos;achat
+            recommandée, et l&apos;écart que ça représente.
+          </p>
         </Reveal>
 
         <Reveal delay={100}>
@@ -142,7 +149,7 @@ export default function LandingWidgetPreview() {
                 className="flex-1 mx-4 px-3 py-1 rounded text-xs text-center"
                 style={{ background: "rgba(17, 27, 53, 0.8)", color: "var(--steel)", border: "1px solid rgba(107, 127, 168, 0.1)" }}
               >
-                intranet.votre-pme.fr/deplacements
+                app.flysmart.fr/analyse
               </div>
             </div>
 
@@ -158,7 +165,7 @@ export default function LandingWidgetPreview() {
                     className="text-xs px-2 py-0.5 rounded-full"
                     style={{ background: "rgba(232, 163, 48, 0.1)", color: "var(--amber)", border: "1px solid rgba(232, 163, 48, 0.2)" }}
                   >
-                    Votre outil
+                    Aperçu produit
                   </span>
                 </div>
                 <div className="hidden sm:flex gap-1 p-0.5 rounded-lg" style={{ background: "rgba(8, 12, 24, 0.5)" }}>
@@ -223,7 +230,11 @@ export default function LandingWidgetPreview() {
                     </div>
                   </div>
 
-                  <svg viewBox="0 0 640 280" className="h-auto w-full" role="img" aria-label={`Courbe d'évolution du prix pour ${wr.title}`}>
+                  {/* En mobile, la courbe tombait a ~243px de large : les libelles
+                      de semaine devenaient illisibles. Elle defile desormais dans
+                      son propre conteneur, sans faire deborder la page. */}
+                  <div className="overflow-x-auto">
+                  <svg viewBox="0 0 640 280" className="h-auto w-full min-w-[520px]" role="img" aria-label={`Courbe d'évolution du prix pour ${wr.title}`}>
                     <defs>
                       <linearGradient id="landing-curve-fill" x1="0" y1="0" x2="0" y2="1">
                         <stop offset="0%" stopColor="rgba(232,163,48,0.35)" />
@@ -274,6 +285,7 @@ export default function LandingWidgetPreview() {
                     <rect x={wOptX - 68} y={wOptY - 62} width="136" height="30" rx="15" fill="rgba(232,163,48,0.14)" stroke="rgba(232,163,48,0.28)" />
                     <text x={wOptX} y={wOptY - 43} textAnchor="middle" fontSize="11" fontWeight="700" fill="#F6C978">Point optimal</text>
                   </svg>
+                  </div>
 
                   <div className="mt-4 grid gap-2 text-xs md:grid-cols-3">
                     {wr.legend.map((l, i) => (
@@ -282,10 +294,9 @@ export default function LandingWidgetPreview() {
                   </div>
 
                   {/* Ces courbes ne proviennent pas d une mesure : la mention est obligatoire. */}
-                  <p className="mt-4 text-xs" style={{ color: "var(--steel)" }}>
-                    Valeurs d&apos;illustration — cette courbe montre le principe de lecture,
-                    pas un relevé de prix.
-                  </p>
+                  <IllustrationNote className="mt-4">
+                    Cette courbe montre le principe de lecture, pas un relevé de prix.
+                  </IllustrationNote>
                 </div>
               </div>
 

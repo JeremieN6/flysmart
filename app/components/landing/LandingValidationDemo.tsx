@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Reveal from "@/app/components/Reveal";
+import IllustrationNote from "@/app/components/landing/IllustrationNote";
 
 type Step = 1 | 2 | 3 | 4;
 
@@ -199,7 +200,7 @@ export default function LandingValidationDemo() {
 
   return (
     <section
-      style={{ background: "#060a16", color: "#e9edf8", padding: "clamp(72px,10vw,120px) clamp(16px,4vw,24px)", display: "flex", flexDirection: "column", alignItems: "center", gap: "clamp(72px,10vw,120px)" }}
+      style={{ background: "#060a16", color: "#e9edf8", padding: "96px clamp(16px,4vw,24px)", display: "flex", flexDirection: "column", alignItems: "center", gap: "clamp(64px,8vw,88px)" }}
     >
       <style>{`
         @keyframes flyIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
@@ -221,10 +222,11 @@ export default function LandingValidationDemo() {
               de ce bloc sont fictifs. Le releve du 11/08/2026 donne d ailleurs l inverse
               sur cette route (Paris-Barcelone : -27,3 %, prix 48-66 EUR).
             */}
-            <p style={{ margin: 0, font: "400 13px/1.6 'Plus Jakarta Sans',sans-serif", color: "#6d7b9c", maxWidth: "600px" }}>
-              Maquette d&apos;interface — tous les montants, pourcentages et noms affichés
-              dans cette démo sont des valeurs d&apos;illustration.
-            </p>
+            <div style={{ maxWidth: "600px" }}>
+              <IllustrationNote>
+                Montants, pourcentages et noms affichés dans cette démo sont fictifs.
+              </IllustrationNote>
+            </div>
           </div>
         </Reveal>
 
@@ -271,7 +273,7 @@ export default function LandingValidationDemo() {
                 <span style={{ font: "400 12.5px/1.45 'Plus Jakarta Sans',sans-serif", color: "#8fd8a9" }}>Paris→Barcelone est passé sous 300 € — 47 tarifs observés.</span>
               </div>
             </div>
-            <span style={{ font: "400 12px/1.5 'Plus Jakarta Sans',sans-serif", color: "#6d7b9c" }}>Aperçu d&apos;interface — valeurs d&apos;illustration.</span>
+            <IllustrationNote />
           </div>
         </Reveal>
       </div>

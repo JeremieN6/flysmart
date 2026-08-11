@@ -2,32 +2,34 @@ import type { Metadata } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
+  // Ancien positionnement (agences, CE, blogueurs, widget integrable,
+  // "+1% commission") entierement retire : il ne correspondait plus ni a
+  // la landing ni a l ICP PME.
   title: {
-    default: 'FlySmart — Intégrez l\'analyse de prix pour agences, CE et créateurs voyage',
+    default: 'FlySmart — Le bon moment pour acheter vos billets d\'avion pro',
     template: '%s | FlySmart',
   },
   description:
-    'FlySmart aide les agences de voyage, comités d\'entreprise et créateurs de contenu à offrir à leurs clients le meilleur timing d\'achat. Widget intégrable en 5 minutes. +1% commission.',
+    'FlySmart indique aux PME quand acheter leurs billets d\'avion professionnels : recommandation claire, fenêtre de timing lisible et partage pour validation manager.',
   keywords: [
-    'agence de voyage',
-    'comité entreprise',
-    'blogueur voyage',
-    'widget prix vols',
+    'déplacement professionnel',
     'timing achat billet avion',
-    'solution voyage professionnels',
+    'voyage d\'affaires PME',
+    'office manager',
+    'réservation vol entreprise',
   ],
   openGraph: {
-    title: 'FlySmart — Le timing d\'achat optimal pour vos clients',
+    title: 'FlySmart — Sachez quand acheter, sans être expert du voyage',
     description:
-      'Intégrez FlySmart en 5 minutes. Différenciez-vous, économisez sur les déplacements, monétisez votre audience.',
+      'La recommandation d\'achat pour les PME qui gèrent leurs déplacements sans agence dédiée.',
     locale: 'fr_FR',
     type: 'website',
   },
   twitter: {
     card: 'summary',
-    title: 'FlySmart — Le timing d\'achat optimal pour vos clients',
+    title: 'FlySmart — Sachez quand acheter, sans être expert du voyage',
     description:
-      'Intégrez FlySmart en 5 minutes. Différenciez-vous, économisez sur les déplacements, monétisez votre audience.',
+      'La recommandation d\'achat pour les PME qui gèrent leurs déplacements sans agence dédiée.',
   },
   verification: {
     google: 'dS4lDtb3GkUFSthFb5DQkzfwTUYCP_dKFWE5m1s7V8E',

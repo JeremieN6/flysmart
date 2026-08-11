@@ -9,18 +9,22 @@ interface HeaderProps {
   ctaLabel?: string
 }
 
+/* Ancres alignees sur l ordre des sections de la landing.
+   /#segments et /#widget-demo n existaient plus : les deux liens
+   etaient morts. */
 const NAV_LINKS = [
-  { href: '/#segments',    label: 'Solutions' },
-  { href: '/#widget-demo', label: 'Démo' },
-  { href: '/tarifs',       label: 'Tarifs' },
-  { href: '/analyse',      label: 'Analyser' },
+  { href: '/#apercu',   label: 'Démo' },
+  { href: '/#pour-qui', label: 'Pour qui' },
+  { href: '/#tarifs',   label: 'Tarifs' },
+  { href: '/analyse',   label: 'Analyser' },
 ]
 
 const MOBILE_LINKS = [
   { href: '/',              emoji: '🏠', label: 'Accueil' },
+  { href: '/#apercu',       emoji: '📊', label: 'Démo' },
+  { href: '/#pour-qui',     emoji: '🎯', label: 'Pour qui' },
   { href: '/analyse',       emoji: '🔍', label: 'Analyser un vol' },
-  { href: '/widget-demo',   emoji: '📊', label: 'Démo' },
-  { href: '/tarifs',        emoji: '💼', label: 'Tarifs' },
+  { href: '/#tarifs',       emoji: '💼', label: 'Tarifs' },
   { href: '/#contact-demo', emoji: '📞', label: 'Demander une démo' },
 ]
 

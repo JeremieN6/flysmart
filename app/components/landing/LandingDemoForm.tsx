@@ -214,7 +214,8 @@ export default function LandingDemoForm() {
               >
                 {demoStatus === "submitting" ? "Envoi en cours..." : "Demander ma démo gratuite →"}
               </button>
-              <p className="text-center text-xs mt-4" style={{ color: "var(--steel)" }}>Ou intégrez directement — <a href="/tarifs" style={{ color: "var(--amber)" }}>voir les plans</a></p>
+              {/* "Ou integrez directement" : dernier reste du positionnement widget. */}
+              <p className="text-center text-xs mt-4" style={{ color: "var(--steel)" }}>Vous préférez démarrer seul ? <a href="/tarifs" style={{ color: "var(--amber)" }}>Voir les plans</a></p>
             </form>
           </Reveal>
         </div>
