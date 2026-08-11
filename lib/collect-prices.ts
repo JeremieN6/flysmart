@@ -9,8 +9,8 @@
    tout le calendrier, on y lit les six horizons.
 ───────────────────────────────────────────────────────────── */
 
-import { analyzePricesWithFlightSky } from '../services-backend/flightsSkyService.js'
-import { activeRoutes, routeKey, TRACKED_HORIZONS, type TrackedRoute } from '../config/tracked-routes.ts'
+import { analyzePricesWithFlightSky, getLastQuota } from '../services-backend/flightsSkyService.js'
+import { activeRoutes, monthlyCallBudget, routeKey, TRACKED_HORIZONS, type TrackedRoute } from '../config/tracked-routes.ts'
 import { insertPriceSnapshots, type PriceSnapshotInput } from './price-snapshots-db.ts'
 
 const iso = (d: Date) => d.toISOString().split('T')[0]
@@ -37,6 +37,7 @@ export interface CollectionReport {
   routesFailed: number
   snapshotsWritten: number
   outcomes: RouteOutcome[]
+  quota: { limit: number; remaining: number; resetSeconds: number | null } | null
 }
 
 async function collectRoute(route: TrackedRoute, today: Date): Promise<RouteOutcome> {
@@ -132,6 +133,24 @@ export async function collectAllRoutes(
     await new Promise((r) => setTimeout(r, 500))
   }
 
+  const quota = getLastQuota()
+
+  if (quota && Number.isFinite(quota.remaining)) {
+    const budget = monthlyCallBudget()
+    const daysLeft = Math.floor(quota.remaining / Math.max(routes.length, 1))
+    log(
+      `quota API : ${quota.remaining}/${quota.limit} restantes ` +
+        `(~${daysLeft} jours au rythme actuel, budget mensuel ${budget} appels)`,
+    )
+
+    if (daysLeft <= 3) {
+      log(
+        `⚠ quota bientot epuise : la collecte s arretera pour TOUTES les routes. ` +
+          `Reduire le nombre de routes actives ou relever le plan.`,
+      )
+    }
+  }
+
   return {
     startedAt: new Date(started).toISOString(),
     durationMs: Date.now() - started,
@@ -139,5 +158,6 @@ export async function collectAllRoutes(
     routesFailed: outcomes.filter((o) => o.error).length,
     snapshotsWritten: outcomes.reduce((sum, o) => sum + o.collected, 0),
     outcomes,
+    quota,
   }
 }

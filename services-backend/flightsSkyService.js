@@ -50,6 +50,33 @@ function buildCacheKey(prefix, params) {
 }
 
 /**
+ * Dernier etat de quota renvoye par RapidAPI.
+ * Le plan est limite au mois : depasser le plafond coupe la collecte de
+ * toutes les routes jusqu au reset. On expose la valeur pour que le
+ * collecteur puisse l afficher et alerter avant la panne.
+ */
+let lastQuota = null
+
+function captureQuota(headers) {
+  if (!headers) return
+  const limit = headers['x-ratelimit-requests-limit']
+  const remaining = headers['x-ratelimit-requests-remaining']
+  const reset = headers['x-ratelimit-requests-reset']
+  if (limit === undefined && remaining === undefined) return
+
+  lastQuota = {
+    limit: Number(limit),
+    remaining: Number(remaining),
+    resetSeconds: reset === undefined ? null : Number(reset),
+  }
+}
+
+/** Renvoie le dernier quota observe, ou null si aucun appel reseau n a eu lieu. */
+export function getLastQuota() {
+  return lastQuota
+}
+
+/**
  * Convert a group label (low/medium/high) to an approximate multiplier.
  * Helps us estimate missing average/max values when only a single price is provided.
  */
@@ -173,6 +200,8 @@ async function fetchFlightsCalendar(params, retries = 2) {
 
   try {
     const response = await client.get(CALENDAR_ENDPOINT, { params: queryParams })
+
+    captureQuota(response.headers)
 
     if (response.status === 429) {
       throw Object.assign(new Error('Quota RapidAPI dépassé'), { status: 429 })
