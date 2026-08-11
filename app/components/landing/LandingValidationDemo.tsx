@@ -216,6 +216,15 @@ export default function LandingValidationDemo() {
               De la recommandation à la validation, <span style={{ color: "#f5b53d" }}>en un fil</span>
             </h2>
             <p style={{ margin: 0, font: "400 17px/1.6 'Plus Jakarta Sans',sans-serif", color: "#8e9bba", maxWidth: "600px" }}>Cliquez pour parcourir les quatre étapes. Chaque décision part avec sa justification chiffrée — et revient signée.</p>
+            {/*
+              Mention obligatoire : prix, pourcentages, noms de valideurs et voyages passes
+              de ce bloc sont fictifs. Le releve du 11/08/2026 donne d ailleurs l inverse
+              sur cette route (Paris-Barcelone : -27,3 %, prix 48-66 EUR).
+            */}
+            <p style={{ margin: 0, font: "400 13px/1.6 'Plus Jakarta Sans',sans-serif", color: "#6d7b9c", maxWidth: "600px" }}>
+              Maquette d&apos;interface — tous les montants, pourcentages et noms affichés
+              dans cette démo sont des valeurs d&apos;illustration.
+            </p>
           </div>
         </Reveal>
 

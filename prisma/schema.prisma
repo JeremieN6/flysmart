@@ -1,0 +1,62 @@
+// L URL de connexion vit dans prisma.config.ts (Prisma 7 ne l accepte
+// plus ici). Le client runtime passe par @prisma/adapter-neon.
+//
+// Ce schema a ete obtenu par introspection de la base existante
+// (prisma db pull), puis renomme aux conventions Prisma. Les noms
+// physiques des tables et colonnes sont inchanges : aucune migration
+// destructrice n est necessaire, les donnees deja collectees restent.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+/// Historique longitudinal des prix.
+/// Une ligne = le prix d une route pour une date de depart donnee,
+/// releve un jour donne. Chaque ligne est un fait fige.
+model PriceSnapshot {
+  id BigInt @id @default(autoincrement())
+
+  /// Cle de route denormalisee, format 'CDG-MRS'.
+  route       String
+  origin      String
+  destination String
+
+  departureDate DateTime @map("departure_date") @db.Date
+
+  collectedAt DateTime @default(now()) @map("collected_at") @db.Timestamptz(6)
+  collectedOn DateTime @default(dbgenerated("CURRENT_DATE")) @map("collected_on") @db.Date
+
+  /// Fige a l instant du releve : ne jamais le recalculer depuis collectedOn.
+  daysUntilDeparture Int @map("days_until_departure")
+
+  price    Decimal @db.Decimal(10, 2)
+  currency String  @default("EUR")
+
+  /// Non renseigne par FlightSky price-calendar, qui ne renvoie pas la compagnie.
+  airline String?
+
+  source String @default("flightsky")
+
+  @@unique([route, departureDate, collectedOn], map: "price_snapshots_unique_daily_idx")
+  @@index([route, departureDate], map: "price_snapshots_route_departure_idx")
+  @@map("price_snapshots")
+}
+
+model DemoRequest {
+  id            BigInt   @id @default(autoincrement())
+  nom           String
+  email         String
+  entreprise    String
+  structureType String   @map("structure_type")
+  site          String   @default("")
+  message       String   @default("")
+  ipAddress     String?  @map("ip_address")
+  userAgent     String?  @map("user_agent")
+  createdAt     DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  @@map("demo_requests")
+}

@@ -1,0 +1,539 @@
+{
+  "observedAt": "2026-08-11T13:12:57.688Z",
+  "observationDate": "2026-08-11",
+  "method": "transversal — prix du jour pour un depart a ~60j vs ~15j (deux vols differents)",
+  "source": "flightsky/price-calendar",
+  "amadeus": {
+    "available": false,
+    "reason": "injoignable (fetch failed) sur https://test.api.amadeus.com"
+  },
+  "historyDepth": {
+    "probes": {
+      "minus365": {
+        "offset": -365,
+        "ok": false,
+        "message": "Réponse FlightSky invalide"
+      },
+      "minus30": {
+        "offset": -30,
+        "ok": false,
+        "message": "Réponse FlightSky invalide"
+      },
+      "plus30": {
+        "offset": 30,
+        "ok": true,
+        "message": "donnees renvoyees"
+      }
+    },
+    "exploitableYears": "0 (aucun historique expose)"
+  },
+  "parameters": {
+    "FAR_HORIZON": 60,
+    "NEAR_HORIZON": 15,
+    "HORIZON_TOLERANCE": 6,
+    "PAIRS_PER_ROUTE": 3
+  },
+  "schoolHolidays": [
+    {
+      "start": "2026-07-04",
+      "end": "2026-08-31",
+      "name": "Vacances d ete"
+    },
+    {
+      "start": "2026-10-17",
+      "end": "2026-11-02",
+      "name": "Toussaint"
+    },
+    {
+      "start": "2026-12-19",
+      "end": "2027-01-04",
+      "name": "Noel"
+    }
+  ],
+  "routesTested": 8,
+  "routesUsable": 8,
+  "globalMeanDeltaPct": 36.00882854546162,
+  "globalMeanDeltaPctClean": 17.53566550331515,
+  "routes": [
+    {
+      "route": "Paris - Lyon",
+      "from": "CDG",
+      "to": "LYS",
+      "pairs": [
+        {
+          "far": {
+            "departureDate": "2026-10-13",
+            "daysBefore": 62,
+            "price": 85,
+            "holiday": null
+          },
+          "near": {
+            "departureDate": "2026-08-26",
+            "daysBefore": 14,
+            "price": 123,
+            "holiday": "Vacances d ete"
+          },
+          "deltaPct": 44.70588235294118,
+          "clean": false
+        },
+        {
+          "far": {
+            "departureDate": "2026-10-14",
+            "daysBefore": 63,
+            "price": 84,
+            "holiday": null
+          },
+          "near": {
+            "departureDate": "2026-08-25",
+            "daysBefore": 13,
+            "price": 150,
+            "holiday": "Vacances d ete"
+          },
+          "deltaPct": 78.57142857142857,
+          "clean": false
+        },
+        {
+          "far": {
+            "departureDate": "2026-10-07",
+            "daysBefore": 56,
+            "price": 84,
+            "holiday": null
+          },
+          "near": {
+            "departureDate": "2026-09-01",
+            "daysBefore": 20,
+            "price": 81,
+            "holiday": null
+          },
+          "deltaPct": -3.571428571428571,
+          "clean": true
+        }
+      ],
+      "meanDeltaPct": 39.90196078431372,
+      "meanDeltaPctClean": -3.571428571428571,
+      "pricedDays": 68,
+      "calendarFirst": "2026-08-11",
+      "calendarLast": "2026-10-17"
+    },
+    {
+      "route": "Paris - Marseille",
+      "from": "CDG",
+      "to": "MRS",
+      "pairs": [
+        {
+          "far": {
+            "departureDate": "2026-10-13",
+            "daysBefore": 62,
+            "price": 64,
+            "holiday": null
+          },
+          "near": {
+            "departureDate": "2026-08-26",
+            "daysBefore": 14,
+            "price": 90,
+            "holiday": "Vacances d ete"
+          },
+          "deltaPct": 40.625,
+          "clean": false
+        },
+        {
+          "far": {
+            "departureDate": "2026-10-14",
+            "daysBefore": 63,
+            "price": 64,
+            "holiday": null
+          },
+          "near": {
+            "departureDate": "2026-08-25",
+            "daysBefore": 13,
+            "price": 113,
+            "holiday": "Vacances d ete"
+          },
+          "deltaPct": 76.5625,
+          "clean": false
+        },
+        {
+          "far": {
+            "departureDate": "2026-10-07",
+            "daysBefore": 56,
+            "price": 64,
+            "holiday": null
+          },
+          "near": {
+            "departureDate": "2026-09-01",
+            "daysBefore": 20,
+            "price": 90,
+            "holiday": null
+          },
+          "deltaPct": 40.625,
+          "clean": true
+        }
+      ],
+      "meanDeltaPct": 52.604166666666664,
+      "meanDeltaPctClean": 40.625,
+      "pricedDays": 68,
+      "calendarFirst": "2026-08-11",
+      "calendarLast": "2026-10-17"
+    },
+    {
+      "route": "Paris - Nice",
+      "from": "CDG",
+      "to": "NCE",
+      "pairs": [
+        {
+          "far": {
+            "departureDate": "2026-10-13",
+            "daysBefore": 62,
+            "price": 42,
+            "holiday": null
+          },
+          "near": {
+            "departureDate": "2026-08-26",
+            "daysBefore": 14,
+            "price": 42,
+            "holiday": "Vacances d ete"
+          },
+          "deltaPct": 0,
+          "clean": false
+        },
+        {
+          "far": {
+            "departureDate": "2026-10-14",
+            "daysBefore": 63,
+            "price": 42,
+            "holiday": null
+          },
+          "near": {
+            "departureDate": "2026-08-25",
+            "daysBefore": 13,
+            "price": 42,
+            "holiday": "Vacances d ete"
+          },
+          "deltaPct": 0,
+          "clean": false
+        },
+        {
+          "far": {
+            "departureDate": "2026-10-07",
+            "daysBefore": 56,
+            "price": 42,
+            "holiday": null
+          },
+          "near": {
+            "departureDate": "2026-09-01",
+            "daysBefore": 20,
+            "price": 47,
+            "holiday": null
+          },
+          "deltaPct": 11.904761904761903,
+          "clean": true
+        }
+      ],
+      "meanDeltaPct": 3.968253968253968,
+      "meanDeltaPctClean": 11.904761904761903,
+      "pricedDays": 68,
+      "calendarFirst": "2026-08-11",
+      "calendarLast": "2026-10-17"
+    },
+    {
+      "route": "Paris - Toulouse",
+      "from": "CDG",
+      "to": "TLS",
+      "pairs": [
+        {
+          "far": {
+            "departureDate": "2026-10-13",
+            "daysBefore": 62,
+            "price": 70,
+            "holiday": null
+          },
+          "near": {
+            "departureDate": "2026-08-26",
+            "daysBefore": 14,
+            "price": 111,
+            "holiday": "Vacances d ete"
+          },
+          "deltaPct": 58.57142857142858,
+          "clean": false
+        },
+        {
+          "far": {
+            "departureDate": "2026-10-14",
+            "daysBefore": 63,
+            "price": 70,
+            "holiday": null
+          },
+          "near": {
+            "departureDate": "2026-08-25",
+            "daysBefore": 13,
+            "price": 123,
+            "holiday": "Vacances d ete"
+          },
+          "deltaPct": 75.71428571428571,
+          "clean": false
+        },
+        {
+          "far": {
+            "departureDate": "2026-10-07",
+            "daysBefore": 56,
+            "price": 70,
+            "holiday": null
+          },
+          "near": {
+            "departureDate": "2026-09-01",
+            "daysBefore": 20,
+            "price": 83,
+            "holiday": null
+          },
+          "deltaPct": 18.571428571428573,
+          "clean": true
+        }
+      ],
+      "meanDeltaPct": 50.952380952380956,
+      "meanDeltaPctClean": 18.571428571428573,
+      "pricedDays": 68,
+      "calendarFirst": "2026-08-11",
+      "calendarLast": "2026-10-17"
+    },
+    {
+      "route": "Paris - Bordeaux",
+      "from": "CDG",
+      "to": "BOD",
+      "pairs": [
+        {
+          "far": {
+            "departureDate": "2026-10-13",
+            "daysBefore": 62,
+            "price": 71,
+            "holiday": null
+          },
+          "near": {
+            "departureDate": "2026-08-26",
+            "daysBefore": 14,
+            "price": 93,
+            "holiday": "Vacances d ete"
+          },
+          "deltaPct": 30.985915492957744,
+          "clean": false
+        },
+        {
+          "far": {
+            "departureDate": "2026-10-14",
+            "daysBefore": 63,
+            "price": 68,
+            "holiday": null
+          },
+          "near": {
+            "departureDate": "2026-08-25",
+            "daysBefore": 13,
+            "price": 99,
+            "holiday": "Vacances d ete"
+          },
+          "deltaPct": 45.588235294117645,
+          "clean": false
+        },
+        {
+          "far": {
+            "departureDate": "2026-10-07",
+            "daysBefore": 56,
+            "price": 65,
+            "holiday": null
+          },
+          "near": {
+            "departureDate": "2026-09-01",
+            "daysBefore": 20,
+            "price": 92,
+            "holiday": null
+          },
+          "deltaPct": 41.53846153846154,
+          "clean": true
+        }
+      ],
+      "meanDeltaPct": 39.37087077517898,
+      "meanDeltaPctClean": 41.53846153846154,
+      "pricedDays": 68,
+      "calendarFirst": "2026-08-11",
+      "calendarLast": "2026-10-17"
+    },
+    {
+      "route": "Paris - Barcelone",
+      "from": "CDG",
+      "to": "BCN",
+      "pairs": [
+        {
+          "far": {
+            "departureDate": "2026-10-13",
+            "daysBefore": 62,
+            "price": 62,
+            "holiday": null
+          },
+          "near": {
+            "departureDate": "2026-08-26",
+            "daysBefore": 14,
+            "price": 48,
+            "holiday": "Vacances d ete"
+          },
+          "deltaPct": -22.58064516129032,
+          "clean": false
+        },
+        {
+          "far": {
+            "departureDate": "2026-10-14",
+            "daysBefore": 63,
+            "price": 56,
+            "holiday": null
+          },
+          "near": {
+            "departureDate": "2026-08-25",
+            "daysBefore": 13,
+            "price": 51,
+            "holiday": "Vacances d ete"
+          },
+          "deltaPct": -8.928571428571429,
+          "clean": false
+        },
+        {
+          "far": {
+            "departureDate": "2026-10-07",
+            "daysBefore": 56,
+            "price": 66,
+            "holiday": null
+          },
+          "near": {
+            "departureDate": "2026-09-01",
+            "daysBefore": 20,
+            "price": 48,
+            "holiday": null
+          },
+          "deltaPct": -27.27272727272727,
+          "clean": true
+        }
+      ],
+      "meanDeltaPct": -19.593981287529672,
+      "meanDeltaPctClean": -27.27272727272727,
+      "pricedDays": 68,
+      "calendarFirst": "2026-08-11",
+      "calendarLast": "2026-10-17"
+    },
+    {
+      "route": "Paris - Amsterdam",
+      "from": "CDG",
+      "to": "AMS",
+      "pairs": [
+        {
+          "far": {
+            "departureDate": "2026-10-13",
+            "daysBefore": 62,
+            "price": 73,
+            "holiday": null
+          },
+          "near": {
+            "departureDate": "2026-08-26",
+            "daysBefore": 14,
+            "price": 117,
+            "holiday": "Vacances d ete"
+          },
+          "deltaPct": 60.273972602739725,
+          "clean": false
+        },
+        {
+          "far": {
+            "departureDate": "2026-10-14",
+            "daysBefore": 63,
+            "price": 69,
+            "holiday": null
+          },
+          "near": {
+            "departureDate": "2026-08-25",
+            "daysBefore": 13,
+            "price": 124,
+            "holiday": "Vacances d ete"
+          },
+          "deltaPct": 79.71014492753623,
+          "clean": false
+        },
+        {
+          "far": {
+            "departureDate": "2026-10-07",
+            "daysBefore": 56,
+            "price": 71,
+            "holiday": null
+          },
+          "near": {
+            "departureDate": "2026-09-01",
+            "daysBefore": 20,
+            "price": 79,
+            "holiday": null
+          },
+          "deltaPct": 11.267605633802818,
+          "clean": true
+        }
+      ],
+      "meanDeltaPct": 50.41724105469293,
+      "meanDeltaPctClean": 11.267605633802818,
+      "pricedDays": 68,
+      "calendarFirst": "2026-08-11",
+      "calendarLast": "2026-10-17"
+    },
+    {
+      "route": "Paris - Milan",
+      "from": "CDG",
+      "to": "MXP",
+      "pairs": [
+        {
+          "far": {
+            "departureDate": "2026-10-13",
+            "daysBefore": 62,
+            "price": 36,
+            "holiday": null
+          },
+          "near": {
+            "departureDate": "2026-08-26",
+            "daysBefore": 14,
+            "price": 56,
+            "holiday": "Vacances d ete"
+          },
+          "deltaPct": 55.55555555555556,
+          "clean": false
+        },
+        {
+          "far": {
+            "departureDate": "2026-10-14",
+            "daysBefore": 63,
+            "price": 35,
+            "holiday": null
+          },
+          "near": {
+            "departureDate": "2026-08-25",
+            "daysBefore": 13,
+            "price": 73,
+            "holiday": "Vacances d ete"
+          },
+          "deltaPct": 108.57142857142857,
+          "clean": false
+        },
+        {
+          "far": {
+            "departureDate": "2026-10-07",
+            "daysBefore": 56,
+            "price": 36,
+            "holiday": null
+          },
+          "near": {
+            "departureDate": "2026-09-01",
+            "daysBefore": 20,
+            "price": 53,
+            "holiday": null
+          },
+          "deltaPct": 47.22222222222222,
+          "clean": true
+        }
+      ],
+      "meanDeltaPct": 70.44973544973546,
+      "meanDeltaPctClean": 47.22222222222222,
+      "pricedDays": 68,
+      "calendarFirst": "2026-08-11",
+      "calendarLast": "2026-10-17"
+    }
+  ]
+}

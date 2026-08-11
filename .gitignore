@@ -50,3 +50,5 @@ Thumbs.db
 *.tmp
 /backend/tmp
 /backup/*
+# Exports locaux des scripts (CSV/JSON regenerables)
+scripts/output/*.csv

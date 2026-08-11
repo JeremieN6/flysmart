@@ -280,6 +280,12 @@ export default function LandingWidgetPreview() {
                       <div key={i} className="rounded-xl px-3 py-2" style={{ background: l.bg, color: l.color }}>{l.text}</div>
                     ))}
                   </div>
+
+                  {/* Ces courbes ne proviennent pas d une mesure : la mention est obligatoire. */}
+                  <p className="mt-4 text-xs" style={{ color: "var(--steel)" }}>
+                    Valeurs d&apos;illustration — cette courbe montre le principe de lecture,
+                    pas un relevé de prix.
+                  </p>
                 </div>
               </div>
 

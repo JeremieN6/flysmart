@@ -43,13 +43,13 @@ export default function LandingDemoForm() {
       const payload = (await response.json().catch(() => null)) as { error?: string } | null;
 
       if (!response.ok) {
-        throw new Error(payload?.error ?? "La demande n'a pas pu etre envoyee.");
+        throw new Error(payload?.error ?? "La demande n'a pas pu être envoyée.");
       }
 
       setDemoForm(INITIAL_DEMO_FORM);
       setDemoToast({
         type: "success",
-        message: "Demande envoyee. Un expert FlySmart vous contacte sous 24h.",
+        message: "Demande envoyée. Un expert FlySmart vous contacte sous 4h.",
       });
 
       window.setTimeout(() => {
@@ -118,7 +118,7 @@ export default function LandingDemoForm() {
               <span style={{ color: "var(--amber)" }}>démo gratuite</span>
             </h2>
             <p className="text-center mb-10 mt-4" style={{ color: "var(--steel-light)" }}>
-              Réponse sous 24h. Sans engagement. Par un de nos expert FlySmart.
+              Réponse sous 4h ouvrées. Sans engagement. Par un de nos expert FlySmart.
             </p>
           </Reveal>
 

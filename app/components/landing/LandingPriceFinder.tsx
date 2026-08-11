@@ -252,10 +252,16 @@ export default function LandingPriceFinder() {
             Routes populaires
           </p>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              {/*
+                Ecarts issus de scripts/output/price-delta-2026-08-11.json (npm run validate-delta),
+                couple hors vacances scolaires : depart 07/10/2026 vs depart 01/09/2026.
+                Les anciennes routes (Paris-New York, Lyon-Barcelone, Marseille-Tokyo) n avaient
+                jamais ete mesurees et ont ete remplacees par des routes reellement relevees.
+              */}
               {[
-                { from: "Paris", to: "New York", economy: "–34%", originDisplay: "CDG — Paris Charles de Gaulle (France)", destDisplay: "JFK — New York John F. Kennedy (USA)" },
-                { from: "Lyon", to: "Barcelone", economy: "–28%", originDisplay: "LYS — Lyon Saint-Exupéry (France)", destDisplay: "BCN — Barcelone El Prat (Espagne)" },
-                { from: "Marseille", to: "Tokyo", economy: "–41%", originDisplay: "MRS — Marseille Provence (France)", destDisplay: "NRT — Tokyo Narita (Japon)" },
+                { from: "Paris", to: "Milan", economy: "–32%", originDisplay: "CDG — Charles de Gaulle (France)", destDisplay: "MXP — Malpensa (Italie)" },
+                { from: "Paris", to: "Bordeaux", economy: "–29%", originDisplay: "CDG — Charles de Gaulle (France)", destDisplay: "BOD — Mérignac (France)" },
+                { from: "Paris", to: "Marseille", economy: "–29%", originDisplay: "CDG — Charles de Gaulle (France)", destDisplay: "MRS — Provence (France)" },
               ].map((route) => (
                 <button
                   key={route.from + route.to}
@@ -277,6 +283,10 @@ export default function LandingPriceFinder() {
                 </button>
               ))}
             </div>
+            <p className="text-xs text-center mt-6" style={{ color: "var(--steel)" }}>
+              Écarts relevés le 11/08/2026 entre un départ à 8 semaines et un départ à
+              2 semaines, en semaine et hors vacances scolaires. Une mesure par route.
+            </p>
           </div>
         </Reveal>
       </div>
