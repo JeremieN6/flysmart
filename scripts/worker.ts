@@ -36,6 +36,15 @@ const worker = new Worker(
     // La collecte parle a une API externe limitee en quota :
     // un seul job a la fois.
     concurrency: 1,
+    // Un seul job par jour (6h) : ce worker est inactif ~23h55/24h. Sans ces
+    // deux delais explicites, BullMQ interroge Redis en boucle a vide avec
+    // ses valeurs par defaut (quelques secondes) 24h/24, ce qui consomme des
+    // commandes Upstash en continu independamment de toute collecte reelle.
+    // Le job quotidien reste pris en charge immediatement des son ajout a la
+    // file (la lecture bloquante se reveille des qu il arrive) ; seules les
+    // relances a vide sont espacees.
+    drainDelay: 300,
+    stalledInterval: 300_000,
   },
 )
 
