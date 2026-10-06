@@ -1,66 +1,90 @@
 /* ─────────────────────────────────────────────────────────────
-   worker — processus resident qui execute les jobs de collecte
+   worker — processus resident qui lance la collecte quotidienne
    (npm run worker)
 
    A garder en vie sur le serveur (pm2, systemd, docker restart...).
-   Il ne declenche rien seul : c est le job scheduler enregistre par
-   npm run schedule qui lui envoie le travail chaque jour.
+
+   Un simple minuteur (node-cron), sans Redis ni file d attente : le
+   worker BullMQ precedent se reveillait toutes les 10 s, 24h/24, pour
+   un releve par jour, et epuisait seul le quota gratuit d Upstash.
 ───────────────────────────────────────────────────────────── */
 
-import { Worker } from 'bullmq'
+import cron from 'node-cron'
 import { collectAllRoutes } from '../lib/collect-prices.ts'
-import { QUEUE_NAME, redisConnection } from '../lib/queue.ts'
+import {
+  DAILY_PATTERN,
+  DAILY_TIMEZONE,
+  clockIn,
+  isPastDailyTime,
+  parseDailyPattern,
+  runWithRetry,
+} from '../lib/collection-schedule.ts'
+import { hasCollectedToday } from '../lib/price-snapshots-db.ts'
 
-const worker = new Worker(
-  QUEUE_NAME,
-  async (job) => {
-    console.log(`[worker] job ${job.id} (${job.name}) demarre`)
+let running = false
 
-    const report = await collectAllRoutes((line) => console.log(`[worker] ${line}`))
+const log = (line: string) => console.log(`[worker] ${line}`)
 
-    console.log(
-      `[worker] job ${job.id} termine : ${report.snapshotsWritten} snapshots, ` +
+async function collect(trigger: 'cron' | 'rattrapage') {
+  // L API est limitee en quota : jamais deux collectes en parallele.
+  if (running) {
+    log(`collecte (${trigger}) ignoree : une collecte est deja en cours`)
+    return
+  }
+
+  running = true
+  log(`collecte (${trigger}) demarree`)
+
+  try {
+    const report = await runWithRetry(() => collectAllRoutes(log), { log })
+
+    log(
+      `collecte terminee : ${report.snapshotsWritten} snapshots, ` +
         `${report.routesFailed}/${report.routesTotal} routes en echec, ` +
         `${(report.durationMs / 1000).toFixed(1)}s`,
     )
+  } catch (error) {
+    console.error('[worker] collecte abandonnee :', error instanceof Error ? error.message : error)
+  } finally {
+    running = false
+  }
+}
 
-    // Echec total : on laisse BullMQ marquer le job en erreur et rejouer.
-    if (report.snapshotsWritten === 0) {
-      throw new Error('aucune donnee collectee — echec total')
-    }
+/**
+ * Si le process etait arrete a l heure du releve (redemarrage, panne), la
+ * journee serait perdue : on collecte au demarrage, mais seulement si
+ * l heure est passee et qu aucun releve n existe encore pour aujourd hui,
+ * pour ne jamais consommer de quota API deux fois le meme jour.
+ */
+async function catchUpIfMissed() {
+  const scheduled = parseDailyPattern(DAILY_PATTERN)
+  if (!scheduled) return
+  if (!isPastDailyTime(scheduled, clockIn(DAILY_TIMEZONE))) return
 
-    return report
-  },
-  {
-    connection: redisConnection(),
-    // La collecte parle a une API externe limitee en quota :
-    // un seul job a la fois.
-    concurrency: 1,
-    // Un seul job par jour (6h) : ce worker est inactif ~23h55/24h. Sans ces
-    // deux delais explicites, BullMQ interroge Redis en boucle a vide avec
-    // ses valeurs par defaut (quelques secondes) 24h/24, ce qui consomme des
-    // commandes Upstash en continu independamment de toute collecte reelle.
-    // Le job quotidien reste pris en charge immediatement des son ajout a la
-    // file (la lecture bloquante se reveille des qu il arrive) ; seules les
-    // relances a vide sont espacees.
-    drainDelay: 300,
-    stalledInterval: 300_000,
-  },
-)
+  try {
+    if (await hasCollectedToday()) return
+  } catch (error) {
+    console.error('[worker] verification du rattrapage impossible :', error instanceof Error ? error.message : error)
+    return
+  }
 
-worker.on('failed', (job, error) => {
-  console.error(`[worker] job ${job?.id} en echec :`, error.message)
-})
+  log('aucun releve aujourd hui alors que l heure est passee : rattrapage')
+  await collect('rattrapage')
+}
 
-worker.on('error', (error) => {
-  console.error('[worker] erreur de connexion :', error.message)
-})
+if (!cron.validate(DAILY_PATTERN)) {
+  console.error(`[worker] COLLECT_CRON invalide : "${DAILY_PATTERN}"`)
+  process.exit(1)
+}
 
-console.log(`[worker] a l ecoute de la file "${QUEUE_NAME}"`)
+const task = cron.schedule(DAILY_PATTERN, () => void collect('cron'), { timezone: DAILY_TIMEZONE })
+
+log(`collecte planifiee "${DAILY_PATTERN}" (${DAILY_TIMEZONE}), sans Redis`)
+void catchUpIfMissed()
 
 async function shutdown(signal: string) {
-  console.log(`[worker] ${signal} recu, arret propre...`)
-  await worker.close()
+  log(`${signal} recu, arret propre...`)
+  await task.stop()
   process.exit(0)
 }
 

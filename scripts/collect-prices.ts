@@ -1,10 +1,9 @@
 /* ─────────────────────────────────────────────────────────────
-   collect-prices — releve immediat, sans passer par la file
+   collect-prices — releve immediat, sans attendre l heure planifiee
    (npm run collect-prices)
 
-   Utile pour un rattrapage, un test, ou tant que Redis n est pas
-   disponible. La planification quotidienne, elle, passe par BullMQ :
-   npm run schedule puis npm run worker.
+   Utile pour un rattrapage manuel ou un test. La planification
+   quotidienne, elle, est assuree par le worker (npm run worker).
 
    La logique vit dans lib/collect-prices.ts et est partagee avec le
    worker : les deux chemins produisent exactement le meme resultat.

@@ -89,12 +89,18 @@ export async function insertPriceSnapshots(snapshots: PriceSnapshotInput[]) {
   }
 
   // Echec total : on remonte l erreur pour que la route soit marquee en
-  // echec et que BullMQ rejoue. Echec partiel : on garde ce qui est ecrit.
+  // echec et que la collecte soit rejouee. Echec partiel : on garde ce qui est ecrit.
   if (written === 0 && errors.length) {
     throw new Error(errors[0])
   }
 
   return written
+}
+
+/** Vrai si un releve existe deja pour la date du jour (UTC, comme l ecriture). */
+export async function hasCollectedToday() {
+  const count = await prisma.priceSnapshot.count({ where: { collectedOn: todayDateOnly() } })
+  return count > 0
 }
 
 export interface PriceSnapshotRow {

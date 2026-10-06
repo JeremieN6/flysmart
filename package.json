@@ -12,7 +12,6 @@
     "collect-prices": "node --experimental-strip-types --env-file-if-exists=.env --env-file-if-exists=.env.local scripts/collect-prices.ts",
     "export-snapshots": "node --experimental-strip-types --env-file-if-exists=.env --env-file-if-exists=.env.local scripts/export-snapshots.ts",
     "worker": "node --experimental-strip-types --env-file-if-exists=.env --env-file-if-exists=.env.local scripts/worker.ts",
-    "schedule": "node --experimental-strip-types --env-file-if-exists=.env --env-file-if-exists=.env.local scripts/schedule-collect.ts",
     "postinstall": "prisma generate"
   },
   "dependencies": {
@@ -20,11 +19,10 @@
     "@prisma/adapter-neon": "^7.9.1",
     "@prisma/client": "^7.9.1",
     "axios": "^1.6.2",
-    "bullmq": "^6.0.11",
     "dotenv": "^16.4.5",
-    "ioredis": "^6.0.0",
     "next": "^15.3.2",
     "node-cache": "^5.1.2",
+    "node-cron": "^4.3.0",
     "prisma": "^7.9.1",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",

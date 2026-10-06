@@ -29,17 +29,17 @@ le 2026-08-12.
   perte de donnees, via introspection `prisma db pull`)
 - Prisma 7 : `url` n'est plus accepte dans `schema.prisma`, la connexion
   vit dans `prisma.config.ts`. Un driver adapter est obligatoire.
-- File d'attente : BullMQ 6 + ioredis, sur Redis Upstash. Upstash exige
-  `rediss://` (TLS) et restreint les commandes `INFO`/certaines ACL selon
-  la cle utilisee -- voir Lecons Apprises.
+- Planification : minuteur `node-cron` dans le worker PM2
+  (`scripts/worker.ts`, `COLLECT_CRON`/`COLLECT_TZ`), sans Redis ni file
+  d'attente. BullMQ + Upstash retires le 2026-10-06 -- voir Lecons Apprises.
 - Source de prix : FlightSky (RapidAPI), endpoint `price-calendar`.
   Aucun historique disponible (rejette les dates passees). Quota strict
   du plan actuel : 100 requetes/mois.
 - Amadeus integre dans le code (`lib/amadeus.ts`) mais injoignable depuis
   l'environnement de dev (DNS bloque) -- non utilise en pratique.
 - Deploiement : VPS + PM2. Deux process distincts : `flysmart` (app Next)
-  et `flysmart-worker` (worker BullMQ, execute la collecte quotidienne de
-  prix). Deploiement via `.github/workflows/deploy-next.yml`
+  et `flysmart-worker` (minuteur node-cron, execute la collecte quotidienne
+  de prix). Deploiement via `.github/workflows/deploy-next.yml`
   (`git reset --hard`, `npm install`, `npm run build`, reload pm2 des
   deux process).
 - Scripts d'exploitation (`scripts/*.ts`) executes directement en
@@ -65,8 +65,10 @@ le 2026-08-12.
       CE, blogueurs) dans meta, nav, footer, textes de la landing
 - [x] Migration de l'acces DB SQL brut -> Prisma 7 + adapter Neon
 - [x] Table `price_snapshots` (Prisma) : historique longitudinal des prix
-- [x] Pipeline de collecte quotidienne : BullMQ + Upstash Redis + worker
-      PM2 dedie, planifie a 06:00 Europe/Paris
+- [x] Pipeline de collecte quotidienne : worker PM2 dedie avec minuteur
+      node-cron, planifie a 06:00 Europe/Paris, rattrapage au demarrage
+      (etait BullMQ + Upstash Redis jusqu'au 2026-10-06, retire : voir
+      Lecons Apprises)
 - [x] Script `validate-price-delta.ts` : mesure de l'ecart de prix reel
       entre un achat a J-60 et J-15 (methode transversale, pas encore
       longitudinale)
@@ -106,10 +108,10 @@ le 2026-08-12.
   Neon serverless si la base peut etre en cold start : le `maxWait` de
   2s de Prisma est trop court pour le reveil du compute. Voir Lecons
   Apprises.
-- Upstash exige `rediss://` et restreint `INFO`/`EVAL` selon les droits
-  de la cle API utilisee. Toujours verifier que la cle est en
-  lecture-ecriture (`default`, pas `default_ro`) avant de diagnostiquer
-  un bug BullMQ.
+- Ne pas reintroduire BullMQ/Redis pour la collecte : un job planifie
+  laisse un job differe permanent, donc un reveil du worker toutes les
+  10 s (non configurable), ~90 000 commandes/jour -- le quota gratuit
+  Upstash (500 000/mois) tombe en moins d'une semaine. Voir Lecons Apprises.
 - Les scripts `--env-file=.env.local` plantent en dur si le fichier est
   absent sur l'environnement cible (VPS). Utiliser
   `--env-file-if-exists` pour tout nouveau script d'exploitation.
@@ -125,7 +127,8 @@ le 2026-08-12.
 | 2026-08-11 | Passer de l'acces SQL brut a Prisma 7 + `@prisma/adapter-neon` | BullMQ et le pipeline de collecte demandaient une couche d'acces plus structuree ; migration par introspection pour ne rien perdre |
 | 2026-08-11 | Passer de 10 routes court/moyen-courrier a 3 routes long-courrier | Le quota FlightSky (100/mois) ne permet que 3 routes quotidiennes ; l'ecart de prix mesure sur le court-courrier est fort en % mais derisoire en euros (17-27 EUR), donc peu vendeur |
 | 2026-08-12 | Retirer la transaction Prisma qui groupait les ecritures de `price_snapshots` | `Unable to start a transaction in the given time` au premier reveil quotidien de la base ; chaque snapshot est un fait independant, l'atomicite n'apportait rien |
-| 2026-08-12 | Worker BullMQ en process PM2 distinct de l'app Next (`flysmart-worker`) plutot que demarre dans le serveur Next | Un reload du site ne doit pas interrompre une collecte en cours, et les logs des deux doivent rester separables |
+| 2026-08-12 | Worker en process PM2 distinct de l'app Next (`flysmart-worker`) plutot que demarre dans le serveur Next | Un reload du site ne doit pas interrompre une collecte en cours, et les logs des deux doivent rester separables |
+| 2026-10-06 | Remplacer BullMQ + Upstash par un minuteur `node-cron` dans le meme process PM2 | Un seul releve par jour (3 routes) ne justifie pas une file : la planification BullMQ forcait un reveil toutes les 10 s (~89 000 commandes/jour mesurees), epuisant seule le quota gratuit en ~5 jours. La collecte etait deja idempotente et utilisable sans Redis ; retry (60 s puis 120 s) et rattrapage au demarrage conserves |
 
 ---
 
@@ -164,6 +167,16 @@ le 2026-08-12.
   via `IllustrationNote.tsx`, ancres de nav/footer alignees sur le
   nouvel ordre, derniers restes de l'ancien positionnement widget
   retires du layout et de la page d'accueil).
+- 2026-10-06 : quota Upstash (500 000 commandes/mois) a 90 % en 5 jours.
+  Un premier correctif de reglages BullMQ (`drainDelay`/`stalledInterval`)
+  s'est avere sans effet : mesure en local (Redis + `INFO stats`), un
+  worker avec planification quotidienne se reveille toutes les 10 s quoi
+  qu'on regle (~89 000 commandes/jour, colle au mail a 1 % pres).
+  BullMQ/ioredis/Redis retires, `scripts/worker.ts` reecrit en minuteur
+  node-cron (retry, garde anti-chevauchement, rattrapage au demarrage),
+  logique pure dans `lib/collection-schedule.ts`. A faire cote VPS/Upstash
+  apres deploiement : verifier le log `collecte planifiee ... sans Redis`
+  (`pm2 logs flysmart-worker`), puis supprimer la base Upstash `flysmart`.
 
 ---
 

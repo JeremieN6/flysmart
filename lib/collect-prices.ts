@@ -1,9 +1,8 @@
 /* ─────────────────────────────────────────────────────────────
    Logique de collecte, independante de son declencheur.
 
-   Appelee par le worker BullMQ (execution planifiee) comme par
-   scripts/collect-prices.ts (lancement manuel). Aucune dependance a
-   Redis ici : la collecte reste utilisable si la file est indisponible.
+   Appelee par le worker (execution planifiee) comme par
+   scripts/collect-prices.ts (lancement manuel).
 
    Un seul appel API par route : le price-calendar FlightSky renvoie
    tout le calendrier, on y lit les six horizons.

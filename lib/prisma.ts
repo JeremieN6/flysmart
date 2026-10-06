@@ -5,7 +5,7 @@
    qui reutilise le driver serverless deja present dans le projet.
 
    Pas de 'server-only' ici : ce module est aussi importe par le worker
-   BullMQ et les scripts en ligne de commande, hors runtime Next.
+   et les scripts en ligne de commande, hors runtime Next.
 
    Le singleton evite d epuiser le pool de connexions Neon lors des
    rechargements a chaud en developpement.
